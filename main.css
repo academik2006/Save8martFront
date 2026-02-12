@@ -16,41 +16,41 @@
     src: url('fonts/circe.ttf') format('truetype')                     
 }
 body {
-            font-family: 'Pusia', Arial, sans-serif;    
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;            
-        }
+    font-family: 'Pusia', Arial, sans-serif;    
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;            
+}
 .start-screen {            
-            width: 375px; 
-            height: 734px;
-            text-align: center;            
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-image: url('pic/bg_start.jpg'); /* Путь к изображению */
-            background-size: cover;
-            background-position: center; /* Центруем изображение */
-            background-repeat: no-repeat; /* Изображение не повторяется */
-        }
+    width: 375px; 
+    height: 734px;
+    text-align: center;            
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: url('pic/bg_start.jpg'); /* Путь к изображению */
+    background-size: cover;
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
 .rules-screen {            
-            display: none; /* Скрываем диалог по умолчанию */
-            width: 375px;             
-            height: 734px;
-            text-align: center;            
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-image: url('pic/bg_2.png'); /* Путь к изображению */
-            background-size: cover;
-            background-position: center; /* Центруем изображение */
-            background-repeat: no-repeat; /* Изображение не повторяется */
-        }
+    display: none; /* Скрываем диалог по умолчанию */
+    width: 375px;             
+    height: 734px;
+    text-align: center;            
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: url('pic/bg_rules.jpg'); /* Путь к изображению */
+    background-size: cover;
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
 .main_questions_screen {
             display: none; /* Скрываем диалог по умолчанию */            
             width: 375px; 
@@ -94,26 +94,27 @@ h1 {
 /* Базовый общий класс для всех кнопок */
 .button-common {
     height: 64px;
-    border-radius: 48px;
+    border-radius: 36px;
+    border-color: black;
+    border-width: 3px;
     font-size: 25px;
     font-family: 'CirceExtraBold', Arial, sans-serif;
-    color: #FEFEFE;
+    color: white;
+    text-transform: uppercase;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
 
 .button-common-327 {
-    width: 327px;
-    border: 2px solid #FE961B;
-    background-color: #FE961B;
+    width: 327px;    
+    background-color: red;
 }
 
 
 /* Класс для кнопки с правилами игры */
 .button-common-rules {
-    width: 327px;
-    border: 2px solid #55C0E9;
-    background-color: #55C0E9;
+    width: 327px;    
+    background-color: green;
 }
 
 /* Класс для призовой кнопки */
@@ -292,6 +293,17 @@ h1 {
     text-align: center;
 }
 
+.title_32_circe_extra_bold_brown_allcaps {  
+    margin-top: 10px;  
+    font-size: 32px;
+    line-height: 1;    
+    color: brown;
+    text-transform: uppercase;    
+    font-weight: bold;    
+    font-family: 'CirceExtraBold', Arial, sans-serif;        
+    text-align: center;
+}
+
 .text_16_circe_regular_blue {    
     font-size: 16px;
     line-height: 1;    
@@ -380,16 +392,16 @@ h1 {
 .rules-screen-body {    
     margin-left: auto;
     margin-right: auto;
+    margin-top: 320px;
+    padding: 5px;
     width: 90%;   
-    font-size: 16px;
-    color: #322A22;        
-    padding: 10px;    
-    background-color: #55C0E9;
-    border: 2px solid #55C0E9; /* Добавлен стиль границы */
+    font-size: 12px;
+    color: #322A22;            
+    background-color:burlywood;
+    border: 2px solid brown; /* Добавлен стиль границы */
     border-radius: 16px;    
     font-family: 'CirceRegular', Arial, sans-serif;        
-    text-align: center;
-    line-height: 120%;
+    text-align: justify;
 }
 
 
