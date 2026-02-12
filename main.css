@@ -1,0 +1,535 @@
+
+@font-face {    
+    font-family: 'Pusia'; 
+    src: url('fonts/pusia_bold.otf') format('truetype') 
+}
+@font-face {
+    font-family: 'Commissioner'; 
+    src: url('fonts/commissioner.ttf') format('truetype')                     
+}
+@font-face {
+    font-family: 'CirceExtraBold'; 
+    src: url('fonts/circe_extra_bold.ttf') format('truetype')                     
+}
+@font-face {
+    font-family: 'CirceRegular'; 
+    src: url('fonts/circe.ttf') format('truetype')                     
+}
+body {
+            font-family: 'Pusia', Arial, sans-serif;    
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;            
+        }
+.start-screen {            
+            width: 375px; 
+            height: 734px;
+            text-align: center;            
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-image: url('pic/bg_start.jpg'); /* Путь к изображению */
+            background-size: cover;
+            background-position: center; /* Центруем изображение */
+            background-repeat: no-repeat; /* Изображение не повторяется */
+        }
+.rules-screen {            
+            display: none; /* Скрываем диалог по умолчанию */
+            width: 375px;             
+            height: 734px;
+            text-align: center;            
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-image: url('pic/bg_2.png'); /* Путь к изображению */
+            background-size: cover;
+            background-position: center; /* Центруем изображение */
+            background-repeat: no-repeat; /* Изображение не повторяется */
+        }
+.main_questions_screen {
+            display: none; /* Скрываем диалог по умолчанию */            
+            width: 375px; 
+            height: 734px;  
+            z-index: 1000;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+            background-image: url('pic/bg_2.png'); /* Путь к изображению */
+            background-size: cover; /* Масштабируем изображение, чтобы оно занимало весь контейнер */
+            background-position: center; /* Центруем изображение */
+            background-repeat: no-repeat; /* Изображение не повторяется */
+        }        
+
+.game_stage_screen {
+    overflow-y: auto;     
+    display: none;
+    position: fixed;
+    width: 375px; 
+    height: 734px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    background-image: url('pic/bg_2.png'); /* Путь к изображению */
+    background-size: 100% 100%; /* Масштабируем изображение, чтобы оно занимало весь контейнер */
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+    }  
+.question-list-conteiner {
+        margin-top: 40px;   
+        }                       
+h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }         
+
+/* Базовый общий класс для всех кнопок */
+.button-common {
+    height: 64px;
+    border-radius: 48px;
+    font-size: 25px;
+    font-family: 'CirceExtraBold', Arial, sans-serif;
+    color: #FEFEFE;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.button-common-327 {
+    width: 327px;
+    border: 2px solid #FE961B;
+    background-color: #FE961B;
+}
+
+
+/* Класс для кнопки с правилами игры */
+.button-common-rules {
+    width: 327px;
+    border: 2px solid #55C0E9;
+    background-color: #55C0E9;
+}
+
+/* Класс для призовой кнопки */
+.button-common-prize {
+    width: 140px;
+    border: 2px solid #FE961B;
+    background-color: #FE961B;
+}
+
+/* Класс для следующей кнопки */
+.button-common-next {
+    width: 180px;
+    border: 2px solid #55C0E9;
+    background-color: #55C0E9;
+}
+
+.question-container {
+    display: flex; 
+    justify-content: center;
+    margin-top: 10px;                         
+    }
+
+.question {    
+    font-size: 18px;
+    margin-bottom: 20px;
+    }
+
+.answers {        
+        display: grid;        
+        gap: 10px;        
+        grid-template-columns: 1fr; 
+        }
+
+.answer-button {            
+        width: 327px;
+        height: 64px;
+        border: 2px solid #55C0E9; /* Добавлен стиль границы */
+        border-radius: 48px;
+        font-size: 18px;
+        font-family: 'CirceExtraBold', Arial, sans-serif;    
+        color: #FEFEFE;                
+        background-color: #55C0E9;       
+        padding: 10px;
+    }
+.return-game-button_body {            
+        width: 327px;
+        height: 64px;
+        border: 2px solid #55C0E9; /* Добавлен стиль границы */
+        border-radius: 48px;
+        font-size: 18px;
+        font-family: 'CirceExtraBold', Arial, sans-serif;    
+        color: #FEFEFE;                
+        background-color: #55C0E9;       
+    }
+          
+      
+.question-list-item {            
+        display: flex;
+        justify-content: center;
+        margin-top: 5px;
+        width: 327px;
+        height: 48px;        
+        position: relative;
+        border: 2px solid #55C0E9; /* Добавлен стиль границы */
+        border-radius: 24px;
+        font-size: 22px;
+        font-family: 'CirceExtraBold', Arial, sans-serif;    
+        color: #FEFEFE;        
+        text-align: center;                
+        background-color: #55C0E9; 
+        }  
+
+.question-list-item.fireproof {        
+        background-color: #FE961B;            
+        border: 2px solid #FE961B; /* Добавлен стиль границы */
+        }
+
+.hints {
+        margin-top: 10px;
+        display: flex; /* Включаем Flexbox для контейнера */
+        gap: 10px; /* Устанавливаем отступ между элементами */
+        justify-content: center; /* Центрирование элементов по горизонтали */
+        }
+
+.hint-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #888;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+.hint-button:hover {
+            background-color: #666;
+        }
+.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;            
+        }
+.final-screen {
+            margin-top: 40px;
+        }
+.prize {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+.restart-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+.restart-button:hover {
+    background-color: #45a049;
+}
+.hidden {
+    display: none; /* Элемент полностью скрыт */
+} 
+
+.modal-dialog {
+    display: none; /* Скрываем диалог по умолчанию */
+    position: fixed;
+    width: 375px; 
+    height: 734px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    background-image: url('pic/bg_2.png'); /* Путь к изображению */
+    background-size: 100% 100%; /* Масштабируем изображение, чтобы оно занимало весь контейнер */
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
+
+.modal-header h4 {
+    margin-top: 0;
+}
+
+.modal-title {
+    margin-top: 20px;
+    font-size: 42px;
+    color: #2B2A29;
+    line-height: 1;
+    font-weight: bold;
+    font-family: 'Commissioner', Arial, sans-serif;    
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.title_32_circe_extra_bold_blue {
+    margin-top: 20px;
+    font-size: 32px;
+    line-height: 1;    
+    color: #1A5891;
+    font-weight: bold;    
+    font-family: 'CirceExtraBold', Arial, sans-serif;        
+    text-align: center;
+}
+
+.title_25_circe_extra_bold_red_allcaps {
+    margin-top: 20px;
+    font-size: 25px;
+    line-height: 1;    
+    color: #DE3C16;
+    text-transform: uppercase;    
+    font-weight: bold;    
+    font-family: 'CirceExtraBold', Arial, sans-serif;        
+    text-align: center;
+}
+
+.text_16_circe_regular_blue {    
+    font-size: 16px;
+    line-height: 1;    
+    color: #1A5891;
+    font-weight: normal;
+    font-family: 'CirceRegular', Arial, sans-serif;        
+    text-align: center;
+}
+
+.text_16_circe_regular_white {    
+    font-size: 16px;
+    line-height: 1;    
+    color: #ffffff;
+    font-weight: normal;
+    font-family: 'CirceRegular', Arial, sans-serif;        
+    text-align: center;
+}
+
+
+.modal-image {
+    display: flex;    
+    justify-content: center;    
+    margin-top: 30px;    
+}
+
+.modal-image img {
+    width: 60%;
+    height: 60%;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.modal-image-lose {
+    display: flex;    
+    justify-content: center;    
+    margin-top: 30px;    
+}
+
+.modal-image-lose img {
+    width: 148px;
+    height: 200px;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.image-start-screen {
+    display: flex;    
+    justify-content: center;    
+    margin-top: 30px;    
+}
+
+.image-start-screen img {
+    width: 60%;
+    height: 60%;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.image-start-screen_logo {    
+    width: 60%;
+    height: 60%;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.image-rules-screen {
+    display: flex;    
+    justify-content: center;        
+}
+
+.image-rules-screen img {
+    width: 100px;
+    height: 100px;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.image-main-screen-cat {
+    display: flex;    
+    justify-content: center;        
+    margin-left: 20px;
+    margin-top: 30px;
+}
+
+.image-main-screen-cat img {
+    width: 100%;
+    height: 100%;    
+    margin: auto; /* Отцентрируем изображение внутри контейнера */
+}
+
+.rules-screen-body {    
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;   
+    font-size: 16px;
+    color: #322A22;        
+    padding: 10px;    
+    background-color: #55C0E9;
+    border: 2px solid #55C0E9; /* Добавлен стиль границы */
+    border-radius: 16px;    
+    font-family: 'CirceRegular', Arial, sans-serif;        
+    text-align: center;
+    line-height: 120%;
+}
+
+
+.ved_timer {
+    display: flex;    
+    gap: 50px; /* Отступ между элементами (можно настроить по своему усмотрению) */
+}
+
+.timer-text {
+    color: white;
+    font-size: 32px;
+    font-family: 'CirceRegular', Arial, sans-serif;    
+    position: relative;   
+}
+
+.bg_little_gs {
+    width: 82%;
+    height: 64px;
+    border: 2px solid #FE961B;
+    border-radius: 48px;
+    font-size: 25px;
+    font-family: 'CirceExtraBold', Arial, sans-serif;
+    color: #FEFEFE;
+    background-color: #FE961B;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    transform: translate(10%, 0%);
+    text-align: center;    
+    display: flex;          /* Используем Flexbox для размещения в строке */
+    align-items: center;    /* Выравниваем вертикально по центру */
+    justify-content: space-between; /* Распределяем пространство равномерно */
+}
+
+.question-body {   
+    margin-left: auto;
+    margin-right: auto;    
+    width: 80%;     
+    height: 130px;    
+    font-size: 18px;  
+    padding: 5px;  
+    margin-top: -32px; 
+    color: #55C0E9;
+    font-weight: bold;
+    background-color: #ffffff;
+    border: 2px solid #ffffff; /* Добавлен стиль границы */
+    border-radius: 16px;    
+    font-family: 'CirceExtraBold', Arial, sans-serif;        
+    text-align: center;
+    line-height: 120%;
+}
+
+.help-body {   
+    margin-left: auto;
+    margin-right: auto;    
+    width: 80%;     
+    height: auto;    
+    font-size: 18px;      
+    padding: 10px 10px 10px 10px; /* Верх, справа, низ, слева */
+    padding-top: 30px; /* Здесь задаём сдвиг вверху */ 
+    margin-top: -22px; /* Оставляем отрицательный отступ сверху, чтобы блоки оставались наложены */
+    color: #1A5891;
+    font-weight: bold;
+    background-color: #ffffff;
+    border: 2px solid #ffffff; /* Добавлен стиль границы */
+    border-radius: 16px;    
+    font-family: 'CirceExtraBold', Arial, sans-serif;        
+    text-align: center;
+    line-height: 120%;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.shark-hint-dialog {
+    display: none; /* Скрываем диалог по умолчанию */
+    position: fixed;
+    width: 375px; 
+    height: 734px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    background-image: url('pic/bg_2.png'); /* Путь к изображению */
+    background-size: 100% 100%; /* Масштабируем изображение, чтобы оно занимало весь контейнер */
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
+
+.lose-game-dialog {
+    display: none;
+    position: fixed;
+    width: 375px; 
+    height: 734px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
+    background-image: url('pic/bg_2.png'); /* Путь к изображению */
+    background-size: 100% 100%; /* Масштабируем изображение, чтобы оно занимало весь контейнер */
+    background-position: center; /* Центруем изображение */
+    background-repeat: no-repeat; /* Изображение не повторяется */
+}
+
+.icon {
+    margin-right: 10px; /* Небольшой отступ между иконкой и текстом */
+}
+
+.btn-main-screen-hint {
+    width: 75px;
+    height: 64px;
+    border: 2px solid #FE961B; /* Добавлен стиль границы */
+    border-radius: 24px;
+    gap: 10;
+    cursor: pointer; /* Указатель мыши становится рукой при наведении */
+    background-color: #FE961B; /* Прозрачность фона кнопки */
+    display: flex; /* Размещаем изображение по центру */
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-body {
+    width: 75px;
+    height: 64px;
+    border: 2px solid #FE961B; /* Добавлен стиль границы */
+    border-radius: 24px;
+    gap: 10;
+    cursor: pointer; /* Указатель мыши становится рукой при наведении */
+    background-color: #FE961B; /* Прозрачность фона кнопки */
+    display: flex; /* Размещаем изображение по центру */
+    align-items: center;
+    justify-content: center;
+}
+
+   
