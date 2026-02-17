@@ -26,146 +26,92 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
-<div id = "start-screen-id" class="start-screen">
-    <div>        
-        <div class="image-start-screen" style="margin-top: 350px;">            
-            <img src="pic/game_title.png" alt="game_title_pic">
-        </div>                       
-        <div class="modal-footer" style="margin-top: 20px;">            
-            <button id="show-rules" class="button-common button-common-327">Читать правила</button>      
-        </div>       
-        <div class="modal-footer" style="margin-top: 20px;">            
-            <button id="start-game" class="button-common button-common-rules">Начать игру</button>      
-        </div>
-    </div>   
-</div>
 
-<div id = "rules-screen-id" class="rules-screen">
-    <div>       
-        <div class="rules-screen-body">            
-            <div class="title_32_circe_extra_bold_brown_allcaps">Правила игры</div>                    
-            <div>8 марта – это день, когда все должно быть идеально. Но семья думает иначе!</div>
-            <div>
-            <b>Твоя задача:</b> продержаться 1 минуту и не поддаться на бытовые провокации.<br>
-            <b>Как играть:</b> Уворачивайся от домочадцев и их просьб, вовремя прыгая через них <br>
-            <b>Твоя цель:</b> Сохранить спокойствие и время для себя.<br>
-            <b>Помощь:</b> Если станет совсем тяжко – жми на кнопку «Уехать на шопинг», это даст тебе 5 секунд тишины.<br>
-            <b>Приз:</b> Победишь – получишь заслуженный релакс и подарок от Суши Мастер!</div>
-        </div>        
-        <div class="modal-footer" style="margin-top: 20px;">            
-            <button id="start-game2" class="button-common button-common-rules">Начать игру</button>      
-        </div>
-    </div>   
-</div>
 
-<div id = "main_questions_screen_id" class="main_questions_screen">
+<!-- Блок для портретной ориентации -->
+<div id="portrait-container" class="portrait-mode">
     <div>
-        <div class="ved_timer">
-            <div class="image-main-screen-cat">            
-                <img src="pic/shark_3.png" alt="shark_3_pic">
+        <button id="toggle-button">Изменить ориентацию</button>
+    </div>
+    
+    <div id = "start-screen-id" class="start-screen">
+        <div>        
+            <div class="image-start-screen" style="margin-top: 350px;">            
+                <img src="pic/game_title.png" alt="game_title_pic">
+            </div>                       
+            <div class="modal-footer" style="margin-top: 20px;">            
+                <button id="show-rules" class="button-common button-common-327">Читать правила</button>      
+            </div>       
+            <div class="modal-footer" style="margin-top: 20px;">            
+                <button id="start-game" class="button-common button-common-rules">Начать игру</button>      
             </div>
+        </div>   
+    </div>
+
+    <div id = "rules-screen-id" class="rules-screen">
+        <div>       
+            <div class="rules-screen-body">            
+                <div class="title_32_circe_extra_bold_brown_allcaps">Правила игры</div>                    
+                <div>8 марта – это день, когда все должно быть идеально. Но семья думает иначе!</div>
+                <div>
+                <b>Твоя задача:</b> продержаться 1 минуту и не поддаться на бытовые провокации.<br>
+                <b>Как играть:</b> Уворачивайся от домочадцев и их просьб, вовремя прыгая через них <br>
+                <b>Твоя цель:</b> Сохранить спокойствие и время для себя.<br>
+                <b>Помощь:</b> Если станет совсем тяжко – жми на кнопку «Уехать на шопинг», это даст тебе 5 секунд тишины.<br>
+                <b>Приз:</b> Победишь – получишь заслуженный релакс и подарок от Суши Мастер!</div>
+            </div>        
+            <div class="modal-footer" style="margin-top: 20px;">            
+                <button id="start-game2" class="button-common button-common-rules">Начать игру</button>      
+            </div>
+        </div>   
+    </div>
+
+</div>
+    
+<!-- Блок для альбомной ориентации -->
+<div id="landscape-container" class="landscape-mode hidden">
+    <div>
+        <button id="toggle-button">Изменить ориентацию</button>
+    </div>
+    <div id = "game_screen_id" class="game-screen">
+         <div class="ved_timer">            
             <div class="timer-body" style="margin-top: 60px;">
                 <div class="timer-text" id="timer">0</div>
             </div>           
         </div>
         
-       <div class="bg_little_gs">
-            <div id="question_number_id" style="flex-grow: 1; display: inline-block; margin-left: 30px;">4/10</div>
-            <div id="question_prize_id" style="flex-grow: 1; display: inline-block; margin-left: auto; margin-right: 30px;">80 БАЛЛОВ</div>
-        </div>
-                
-        <div  class="question-body"> 
-            <div id="question-text-id" style="margin-top: 50px;">текст вопроса</div>
-        </div>    
-                
-        <div class="hints">
-            <button class="btn-main-screen-hint" data-hint="5050">
-                <img src="pic/50.png" alt="50_50_pic">
-            </button>
-            <button class="btn-main-screen-hint" data-hint="friend">
-                <img src="pic/gs_logo.png" alt="sushi_pic">
-            </button>
-            <button id="show-results" class="btn-main-screen-hint">
-                <img src="pic/show_results.png" alt="show_result_pic">
-            </button>
-            <button id="music-off" class="btn-main-screen-hint">
-                <img id="music-icon" src="pic/sound_pic_on.png" alt="sound_pic_on">
-            </button>            
-        </div>
-        
-        <div class="game">                        
-            <div class="question-container">                
-                <div class="answers"></div>
-            </div>                       
-        </div>                        
     </div>
-</div>
 
-<div id="сongratulations-dialogue" class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-image">            
-            <img id="modal-image-pic" src="pic/shark_win.png" alt="modal_image_pic">
-        </div> 
-        <div id="modal-header-id" class="title_25_circe_extra_bold_red_allcaps">
-            <p>Поздравлем!</p>
-        </div>
-        <div id='modal-text' class="rules-screen-body" style="margin-top: 20px;">
-            <p> Ты дошел до первой несгораемой остановки! Забираешь баллы или продолжаешь интеллектуальный вояж?</p>
-        </div>
-        <div id = "modal-footer-bronze-silver" class="modal-footer" style="margin-top: 20px;">
-            <button type="button" id="btn-modal-dialog-take-prize-bronze-silver" class="button-common button-common-prize">Приз</button>           
-            <button id="continue-game-btn" class="button-common button-common-next">Дальше</button>
-        </div>
-        <div class="modal-footer-gold hidden" style="margin-top: 20px;">
-            <button type="button" id="btn-modal-dialog-take-prize-gold" class="button-common button-common-327">Забрать приз</button>                       
-        </div>        
-    </div>
-</div>
-
-<div id="sharkhint" class="shark-hint-dialog">
-    <div>
-        <div class="modal-image">            
-            <img src="pic/shark_4.png" alt="shark_hint_pic">
-        </div>       
-
-         <div class="modal-footer" style="margin-top: 20px;">            
-            <button class="button-common button-common-327">Подсказка</button>      
-        </div>
-
-        <div id="mistersu-hint-text" class="help-body"> 
-            <p>Текст подсказки</p>
-        </div> 
-               
-        <div class="modal-footer" style="margin-top: 20px;">            
-            <button id="return-game-button" class="return-game-button_body">Вернуться к игре</button>            
+    <div id="сongratulations-dialogue" class="game-screen game-screen-win">
+        <div class="modal-content">            
+            <div id="modal-header-id" class="title_25_circe_extra_bold_red_allcaps">
+                <p>Поздравлем!</p>
+            </div>
+            <div id='modal-text' class="rules-screen-body" style="margin-top: 20px;">
+                <p> Всё получилось. Ты - настоящая супергероиня праздника!</p>
+            </div>
+            <div class="modal-footer-gold hidden" style="margin-top: 20px;">
+                <button type="button" id="btn-modal-dialog-take-prize-gold" class="button-common button-common-327">Забрать промокод</button>                       
+            </div>        
         </div>
     </div>
-</div>
-
-<div id="losegame" class="lose-game-dialog">
-    <div>
-        <div class="modal-image">            
-            <img src="pic/shark_lose.png" alt="lose_game_shark_pic">
-        </div>       
-
-        <div class="title_25_circe_extra_bold_red_allcaps">
-            <p>Эх, бывает</p>
-        </div>        
-             
-        <div class="rules-screen-body">
-            <p class="text_16_circe_regular_white">Сегодня вопросы коварнее, чем выбор платья.Но завтра – новая попытка. Возвращайся за реваншем!</p>
-        </div>        
-        
-        <div class="modal-footer" style="margin-top: 20px;">            
-            <button id="exit-game-lose" class="button-common button-common-327">Выход</button>            
+    
+    <div id="losegame" class="game-screen game-screen-lose">
+        <div>               
+            <div class="rules-screen-body">
+                <p class="text_16_circe_regular_white">Ой, быт оказался коварнее..</p>
+            </div>        
+            
+            <div class="modal-footer" style="margin-top: 20px;">            
+                <button id="exit-game-lose" class="button-common button-common-327">Попробовать снова</button>            
+            </div>
         </div>
     </div>
+
 </div>
+
 
 <script>
-let currentQuestion = 0;
-let hintsUsed = [];
-let totalPrize = 0;
 let isMusicPlay = true;
 
 let prizeDiscounteLevel = "0";
@@ -174,15 +120,53 @@ const silverLevel = "SILVER";
 const bronzeLevel = "BRONZE";
 
 let timerInterval = null;
-const SECONDS_FOR_ONE_QUESTION = 30;
-const PRIZE_ONE_QUESTION = 20;
-const QUESTION_ALL = 10;
+const SECONDS_FOR_ONE_QUESTION = 5;
+
 let audioMain = document.getElementById("audioMain");
 let audioWin = document.getElementById("audioWin");
 let audioTenQuestion = document.getElementById("audioTenQuestion");
 let availableQuestionsLight = window.questions_light ? [...window.questions_light] : [];
 let availableQuestionsHard = window.questions_hard ? [...window.questions_hard] : [];
 let question = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const portraitContainer = document.querySelector('#portrait-container');
+    const landscapeContainer = document.querySelector('#landscape-container');
+
+    // Функция для смены ориентации
+    function handleOrientationChange() {
+        if (window.matchMedia("(orientation: portrait)").matches) {
+            portraitContainer.classList.remove('hidden');
+            landscapeContainer.classList.add('hidden');
+        } else {
+            portraitContainer.classList.add('hidden');
+            landscapeContainer.classList.remove('hidden');
+        }
+    }
+
+    // Регистрация прослушивания изменений ориентации
+    window.addEventListener('resize', handleOrientationChange);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.querySelector('#toggle-button');
+    let isPortraitMode = true;
+
+    toggleButton.addEventListener('click', () => {
+        const portraitContainer = document.querySelector('#portrait-container');
+        const landscapeContainer = document.querySelector('#landscape-container');
+
+        if (isPortraitMode) {
+            portraitContainer.classList.remove('hidden');
+            landscapeContainer.classList.add('hidden');
+            isPortraitMode = false;
+        } else {
+            portraitContainer.classList.add('hidden');
+            landscapeContainer.classList.remove('hidden');
+            isPortraitMode = true;
+        }
+    });
+});
 
 document.getElementById('start-game').addEventListener('click', startGame);
 document.getElementById('start-game2').addEventListener('click', startGame);
@@ -208,14 +192,14 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
     });
        
     function startGame() {
-        document.getElementById("main_questions_screen_id").style.display = "block";
+        document.getElementById("game_screen_id").style.display = "block";
         document.getElementById('start-screen-id').style.display = "none";
         document.getElementById('rules-screen-id').style.display = "none";                
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;
         audioTenQuestion.volume = 0.2;
         audioMain.play();       
-        checkGameProgress()
+        startTimer()
     }
 
     function showRules() {
@@ -266,107 +250,8 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
             default: nextQuestion()                 
         }        
                 
-    }
-
-    function nextQuestion() {                       
-
-        console.log(`запустилась функция следующий вопрос`);
-
-        if (currentQuestion + 1 === QUESTION_ALL) {
-        audioMain.pause()
-        audioTenQuestion.play()    
-        question = getRandomQuestion(availableQuestionsHard);
-        document.getElementById('question_prize_id').textContent = `300 БАЛЛОВ`;                
-        } else {
-        question = getRandomQuestion(availableQuestionsLight);
-        document.getElementById('question_prize_id').textContent = `${(currentQuestion + 1)*PRIZE_ONE_QUESTION} БАЛЛОВ`;                
-        }               
-        document.querySelector('.answers').innerHTML = '';                       
-        startTimer()               
-        
-        document.getElementById('question-text-id').textContent = question.question;
-        document.getElementById('question_number_id').textContent = `${currentQuestion + 1} / 10`;  
-               
-        
-        question.answers.forEach(answer => {            
-            const button = document.createElement('button');
-            button.className = 'answer-button';
-            button.textContent = answer;
-            button.addEventListener('click', () => checkAnswer(answer, button));
-            document.querySelector('.answers').appendChild(button);            
-        });           
-    }
-
-    function getRandomQuestion(availableQuestions) {
-    const index = Math.floor(Math.random() * availableQuestions.length);
-    const question = availableQuestions[index]; // Получаем вопрос по этому индексу    
-    availableQuestions.splice(index, 1);
-    return question;
-    }
-
-    function checkAnswer(answer, button) {        
-        button.style.backgroundColor = '#FE961B';
-        button.style.transform = 'scale(1.05)';
-        button.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.25)';
-        button.style.border = '2px solid #FE961B'; // Добавляем границу толщиной 2 пикселя и цветом #FE961B 
-
-        if (answer === question.correctAnswer) {
-            totalPrize += PRIZE_ONE_QUESTION*(currentQuestion+1);
-            currentQuestion++;            
-            setTimeout(checkGameProgress, 1000);
-        } else {            
-            showFinalScreen(false);
-        }
-    }
-
-    function useHint(hintType) {
-        if (hintsUsed.includes(hintType)) return;        
-                
-        switch (hintType) {
-            case 'friend':
-                hintsUsed.push(hintType);
-                addDisableToHintButtons(hintType);
-                showHint(question);                
-                break;           
-            case '5050':
-                hintsUsed.push(hintType);
-                addDisableToHintButtons(hintType);
-                removeTwoWrongAnswers(question);
-                break;     
-
-        }
-    }
-
-    function addDisableToHintButtons (hintType) {
-        const hintButtons = document.querySelectorAll('.btn-main-screen-hint');
-        for (let i = 0; i < hintButtons.length; i++) {
-            if (hintButtons[i].dataset.hint === hintType) {
-                    hintButtons[i].classList.add('disabled');                    
-                    break;                                 
-            }
-        }
-    }
-
-    function removeTwoWrongAnswers(question) {        
-        const wrongAnswers = question.answers.filter(answer => answer !== question.correctAnswer);
-        const randomIndexes = Array.from({length: wrongAnswers.length}, (_, i) => i).sort(() => Math.random() - 0.5).slice(0, 2);
-
-        wrongAnswers.forEach((wrongAnswer, index) => {
-            if (randomIndexes.includes(index)) {
-                const buttons = document.querySelectorAll('.answer-button');
-                buttons.forEach(button => {
-                    if (button.textContent === wrongAnswer) {
-                        button.style.display = 'none';                        
-                    }
-                });
-            }
-        });
-    }
-
-    function showResultScreen() {
-        document.getElementById("main_questions_screen_id").style.display = "none";
-        document.getElementById("game_stage_screen_id").style.display = "block";
-    }
+    }     
+  
 
     function switchMusic() {
     if (isMusicPlay) {
@@ -387,6 +272,7 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
             audioWin.play()
             showModalDialog(goldLevel);
         } else {   
+            document.getElementById("game_screen_id").style.display = "none";
             document.getElementById("losegame").style.display = "block";          
         }         
     }
@@ -397,7 +283,7 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
         let textHeaderElement = document.getElementById('modal-header-id');
         let modalTextElement = document.getElementById('modal-text');
         let modalImage = document.getElementById('modal-image-pic');
-        document.getElementById("main_questions_screen_id").style.display = "none";
+        document.getElementById("game_screen_id").style.display = "none";
         document.getElementById("сongratulations-dialogue").style.display = "block";
 
         switch (level) {
@@ -426,31 +312,15 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
         }
 
        
-    }
-    
-function showHint(question) {
-    let quetionsVariant = getCurrentQuestionListForHelper(question);
-    let randomHintText = quetionsVariant[Math.floor(Math.random() * quetionsVariant.length)];
-    document.getElementById("main_questions_screen_id").style.display = "none";
-    document.getElementById("sharkhint").style.display = "block";
-    document.getElementById('mistersu-hint-text').innerHTML = randomHintText;
-}
+    }    
+
 
 // Скрытие модального окна
     function hideDialog() {
-    document.getElementById('сongratulations-dialogue').style.display = "none";
-    document.getElementById('sharkhint').style.display = "none";
-    document.getElementById('losegame').style.display = "none";
-    document.getElementById('game_stage_screen_id').style.display = "none";
-    document.getElementById("main_questions_screen_id").style.display = "block";
-    nextQuestion()
+    document.getElementById('сongratulations-dialogue').style.display = "none";    
+    document.getElementById('losegame').style.display = "none";    
+    document.getElementById("game_screen_id").style.display = "block";    
     }
-
-function hideDialogMisterSuHint() {
-    document.getElementById('sharkhint').style.display = "none";
-    document.getElementById("main_questions_screen_id").style.display = "block";
-    
-    }    
 
 // Функция продолжения игры
     function continueGame() {
