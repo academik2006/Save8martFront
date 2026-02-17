@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Спастись на 8 марта</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script> 
-    <link rel="stylesheet" href="main.css">  
-    <script src="questions.js"></script>        
+    <link rel="stylesheet" href="main.css">      
 </head>
 <body>
 
@@ -43,7 +42,7 @@
                 <button id="show-rules" class="button-common button-common-327">Читать правила</button>      
             </div>       
             <div class="modal-footer" style="margin-top: 20px;">            
-                <button id="start-game" class="button-common button-common-rules">Начать игру</button>      
+                <button id="start-game" class="button-common button-common-rules">Продолжить</button>      
             </div>
         </div>   
     </div>
@@ -61,7 +60,7 @@
                 <b>Приз:</b> Победишь – получишь заслуженный релакс и подарок от Суши Мастер!</div>
             </div>        
             <div class="modal-footer" style="margin-top: 20px;">            
-                <button id="start-game2" class="button-common button-common-rules">Начать игру</button>      
+                <button id="start-game2" class="button-common button-common-rules">Продолжить</button>      
             </div>
         </div>   
     </div>
@@ -73,6 +72,13 @@
     <div>
         <button id="toggle-button">Изменить ориентацию</button>
     </div>
+
+    <div id = "turn_screen_id" class="game-screen game-screen-turn">
+         <div class="modal-footer" style="margin-top: 260px;">            
+                <button id="continue-game" class="button-common button-common-rules">Старт</button>      
+            </div>        
+    </div>
+
     <div id = "game_screen_id" class="game-screen">
          <div class="ved_timer">            
             <div class="timer-body" style="margin-top: 60px;">
@@ -98,12 +104,14 @@
     
     <div id="losegame" class="game-screen game-screen-lose">
         <div>               
-            <div class="rules-screen-body">
-                <p class="text_16_circe_regular_white">Ой, быт оказался коварнее..</p>
+            <div class="button-right">
+                <div class="win-screen-body">
+                    <p>Ой, быт оказался коварнее..</p>
+                </div>                
             </div>        
             
-            <div class="modal-footer" style="margin-top: 20px;">            
-                <button id="exit-game-lose" class="button-common button-common-327">Попробовать снова</button>            
+            <div class="button-right">            
+                <button id="exit-game-lose" class="button-common button-common-280">Попробовать снова</button>            
             </div>
         </div>
     </div>
@@ -150,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.querySelector('#toggle-button');
-    let isPortraitMode = true;
+    let isPortraitMode = false;
 
     toggleButton.addEventListener('click', () => {
         const portraitContainer = document.querySelector('#portrait-container');
@@ -168,8 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.getElementById('start-game').addEventListener('click', startGame);
-document.getElementById('start-game2').addEventListener('click', startGame);
+document.getElementById('start-game').addEventListener('click', showTurnWarningScreen);
+document.getElementById('start-game2').addEventListener('click', showFinalScreen);
+document.getElementById('continue-game').addEventListener('click', startGame);
+
+
 document.getElementById('show-rules').addEventListener('click', showRules);
 document.getElementById('music-off').addEventListener('click', switchMusic);
 
@@ -190,10 +201,22 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
 document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
         button.addEventListener('click', () => useHint(button.dataset.hint));
     });
+
+    function showTurnWarningScreen() {
+        document.getElementById("turn_screen_id").style.display = "block";
+        document.getElementById('start-screen-id').style.display = "none";
+        document.getElementById('rules-screen-id').style.display = "none";                
+        audioMain.volume = 0.2;
+        audioWin.volume = 0.2;
+        audioTenQuestion.volume = 0.2;
+        audioMain.play();       
+        startTimer()
+    }
        
     function startGame() {
         document.getElementById("game_screen_id").style.display = "block";
         document.getElementById('start-screen-id').style.display = "none";
+        document.getElementById("turn_screen_id").style.display = "none";
         document.getElementById('rules-screen-id').style.display = "none";                
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;
