@@ -11,7 +11,7 @@
 <body>
 
 <audio loop id="audioMain">
-    <source src="music/main-asia.mp3" type="audio/mpeg">    
+    <source src="music/main_theme_8_save.mp3" type="audio/mpeg">    
     Проигрывание музыки не поддерживается.
 </audio>
 
@@ -79,13 +79,36 @@
             </div>        
     </div>
 
-    <div id = "game_screen_id" class="game-screen">
-         <div class="ved_timer">            
-            <div class="timer-body" style="margin-top: 60px;">
+    <div id="game_screen_id" class="game-screen">
+        <div class="top_bar_conteiner">
+            <div class="timer-body">
                 <div class="timer-text" id="timer">0</div>
-            </div>           
+            </div>
+            <div>
+                <button id="music-off" class="music-button">
+                    <img src="pic/sound_on.png" alt="turn_sound_pic">
+                </button>
+            </div>
+        </div>
+
+        <div id="enemy_id" class="enemy-conteiner">
+            <img id="enemy_pic_id" src="pic/man.png" alt="enemy_pic">
         </div>
         
+        <div id="hero_id" class="hero-conteiner">
+            <img src="pic/wife_stay.png" alt="hero_pic">
+        </div>
+
+        <div class="bottom_bar_conteiner">
+            <div style="margin-top: 20px;">
+                <button id="shopping_button_id" class="button-common button-common-280-red button-common-280-green">Поехать на шопинг</button>
+            </div>
+            <div>
+                <button id="jump_button_id" class="music-button">
+                    <img src="pic/jump.png" alt="jump_pic">
+                </button>
+            </div>
+        </div>
     </div>
 
     <div id="сongratulations-dialogue" class="game-screen game-screen-win">
@@ -125,7 +148,7 @@
 let isMusicPlay = true;
 
 let timerInterval = null;
-const SECONDS_FOR_ONE_QUESTION = 5;
+const SECONDS_FOR_ONE_GAME = 50;
 
 let audioMain = document.getElementById("audioMain");
 let audioWin = document.getElementById("audioWin");
@@ -172,12 +195,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById('start-game').addEventListener('click', showTurnWarningScreen);
 document.getElementById('start-game2').addEventListener('click', showTurnWarningScreen);
-document.getElementById('continue-game').addEventListener('click', startGame);
+document.getElementById('continue-game').addEventListener('click', startGameScreen);
 
 
 document.getElementById('show-rules').addEventListener('click', showRules);
 document.getElementById('music-off').addEventListener('click', switchMusic);
-document.getElementById('timer').textContent = SECONDS_FOR_ONE_QUESTION;
+document.getElementById('timer').textContent = SECONDS_FOR_ONE_GAME;
+/*document.getElementById('jump_button_id').addEventListener('click', heroJump);*/
+/*document.getElementById('shopping_button_id').addEventListener('click', goShoping);*/
 
 document.getElementById("exit-game-lose").addEventListener("click", function () {
     //тут нужно закрывать игру с призом NONE
@@ -194,7 +219,7 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         audioMain.play();               
     }
        
-    function startGame() {
+    function startGameScreen() {
         document.getElementById("game_screen_id").style.display = "block";
         document.getElementById('start-screen-id').style.display = "none";
         document.getElementById("turn_screen_id").style.display = "none";
@@ -202,8 +227,9 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;
         audioTenQuestion.volume = 0.2;
-        audioMain.play();       
-        startTimer()
+        audioMain.play();     
+        startGame()  
+        /*startTimer()*/
     }
 
     function showRules() {
@@ -213,25 +239,10 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         audioWin.volume = 0.2;
         audioTenQuestion.volume = 0.2;
         audioMain.play();               
-    }
-
+    }    
     
-    function startTimer() {
-        let timeLeft = SECONDS_FOR_ONE_QUESTION;                
-            if (!timerInterval) {
-                timerInterval = setInterval(() => {
-                    if (timeLeft > 0) {
-                        timeLeft--;
-                        document.getElementById('timer').innerText = timeLeft;                        
-                    } else {
-                        resetTimerForNextQuestion()
-                        showWinScreen(false)                        
-                    }
-                }, 1000);
-            }            
-        }
     function resetTimerForNextQuestion() {        
-        document.getElementById('timer').innerText = SECONDS_FOR_ONE_QUESTION;
+        document.getElementById('timer').innerText = SECONDS_FOR_ONE_GAME;
         clearInterval(timerInterval);
         timerInterval = null
     }       
@@ -243,18 +254,11 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         isMusicPlay = false;
     } else {
         audioMain.play();
-        document.getElementById("music-icon").src = "pic/sound_pic_on.png";                
+        document.getElementById("music-icon").src = "pic/sound_on.png";                
         isMusicPlay = true;
-    }
-}
-
-    function showWinScreen() {        
-        audioMain.pause()  
-        audioTenQuestion.pause()                      
-        audioWin.play()
-        document.getElementById("game_screen_id").style.display = "none";
-        document.getElementById("сongratulations-dialogue").style.display = "block";        
-    }
+    }    
+    }  
+    
  
 // Скрытие модального окна
     function hideDialog() {
@@ -264,6 +268,146 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     }
 
 </script>
+
+<script>
+    const gameScreen = document.getElementById("game_screen_id");
+    const heroContainer = document.getElementById("hero_id");
+    const enemyContainer = document.getElementById("enemy_id");
+    const timerText = document.getElementById("timer");
+    const musicOffBtn = document.getElementById("music-off");
+    const shoppingBtn = document.getElementById("shopping_button_id");
+    const jumpBtn = document.getElementById("jump_button_id");
+
+    let isJumping = false;    
+    let heroBottomOffset = 0;
+    let remainingTime = 60; // Игровая продолжительность 1 мин
+    let gameInterval;
+
+    let enemiesList = [
+    { type: 'man', speed: 3, height: 10, image: 'pic/man.png' },
+    { type: 'elderSon', speed: 6, height: 8, image: 'pic/big_sun.png' },
+    { type: 'youngerSon', speed: 7, height: 6, image: 'pic/little_sun.png' },
+    { type: 'daughter', speed: 5, height: 3, image: 'pic/daughter.png' },
+    { type: 'fish', speed: 8, height: 2, image: 'pic/fish.png' },
+    { type: 'cat', speed: 10, height: 1, image: 'pic/cat.png' }
+    ];
+  
+
+    // Ищем индекс элемента 'man' в массиве
+    let currentEnemyIndex = enemiesList.findIndex(enemy => enemy.type === 'man');
+    
+    if (currentEnemyIndex === -1) {
+        currentEnemyIndex = 0;
+    }
+
+    // Начинаем игру
+    function startGame() {
+        resetGame();
+        gameInterval = setInterval(updateGameState, 200);
+        startTimer()
+    }
+
+    // Завершение игры
+    function endGame() {
+        clearInterval(gameInterval);
+        showWinScreen()
+    }
+
+    function startTimer() {
+        let timeLeft = SECONDS_FOR_ONE_GAME;                
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        document.getElementById('timer').innerText = timeLeft;                        
+                    } else {
+                        resetGame()
+                        showWinScreen()
+                    }
+                }, 1000);
+            }            
+        }
+
+    // Основные игровые процессы
+    function updateGameState() {        
+        
+        // Перемещение врага
+        enemyContainer.style.left = `${enemiesList[currentEnemyIndex].speed += 2}%`;
+
+        // Проверка достижения конца экрана
+        if (parseInt(enemyContainer.style.left.split("%")[0]) >= 100) {
+            changeEnemy(); // Заменяем врага на следующего
+        }
+
+        // Обработка прыжков
+            if (isJumping) {
+                heroBottomOffset += 12;
+                heroContainer.style.bottom = `${heroBottomOffset}px`;
+                setTimeout(() => {
+                    heroBottomOffset -= 12;
+                    heroContainer.style.bottom = `${heroBottomOffset}px`;
+                    isJumping = false;
+                }, 1000);
+            }
+
+            // Обнаружение столкновения
+            /*
+            if (
+                parseInt(enemyContainer.style.left.split("%")[0]) >
+                (parseInt(heroContainer.style.right.split("%")[0]) || 0)
+            ) {
+                alert("Вы столкнулись с врагом! Игра закончена.");
+                endGame();
+            }
+                */
+        }
+
+        // Реакция на клик кнопки прыжка
+        jumpBtn.onclick = () => {
+            if (!isJumping) {
+                isJumping = true;
+            }
+        };
+
+        // Переход на шопинг
+        shoppingBtn.onclick = () => {            
+            heroContainer.classList.add("oops");
+            setTimeout(() => {
+                heroContainer.classList.remove("oops");
+            }, 5000);
+        };
+
+        function changeEnemy() {
+            currentEnemyIndex = (currentEnemyIndex + 1) % enemiesList.length;
+            let newEnemy = enemiesList[currentEnemyIndex];
+            enemyContainer.style.left = "0%"; // Возвращаем врага в начало
+            /*enemyContainer.style.bottom = `${canvas.height - newEnemy.height}px`; // Устанавливаем новую высоту*/
+            enemySpeed = newEnemy.speed; // Устанавливаем новую скорость 
+            document.getElementById("enemy_pic_id").src = newEnemy.image;           
+
+            
+            
+        }
+
+        // Сброс состояния игры
+        function resetGame() {
+            isJumping = false;
+            enemySpeed = 1;
+            heroBottomOffset = 0;
+            remainingTime = 60;
+            heroContainer.style.bottom = "0px";
+            enemyContainer.style.left = "0%";
+        }
+        
+        function showWinScreen() {        
+        audioMain.pause()  
+        audioTenQuestion.pause()                      
+        audioWin.play()
+        document.getElementById("game_screen_id").style.display = "none";
+        document.getElementById("сongratulations-dialogue").style.display = "block";        
+        }
+
+    </script>
 
 <script>
     let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
