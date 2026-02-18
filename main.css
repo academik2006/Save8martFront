@@ -90,17 +90,22 @@ body {
     text-align: justify;
 }
 
-.win-screen-body {    
+.lose-screen-body {    
     width: 320px;    
     height: 80px; 
     display: flex;
-    justify-content: center;      
+    justify-content: center;   
+    text-align: center;   
     margin-top: 220px;    
     padding: 5px;    
     background-color:burlywood;
     border: 2px solid brown; /* Добавлен стиль границы */
     border-radius: 16px;    
     font-family: 'CirceRegular', Arial, sans-serif;            
+}
+
+.win-screen-body {        
+    height: 120px;        
 }
 
 .game-screen {
@@ -148,13 +153,17 @@ body {
     background-color: red;
 }
 
-.button-common-280 {
+.button-common-280-red {
     width: 280px; 
     height: 48px;
     font-size: 18px;   
     margin-right: 20px;
     margin-top: -30px;
     background-color: red;
+}
+
+.button-common-280-green {    
+    background-color: green;
 }
 
 

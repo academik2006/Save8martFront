@@ -89,29 +89,31 @@
     </div>
 
     <div id="сongratulations-dialogue" class="game-screen game-screen-win">
-        <div class="modal-content">            
-            <div id="modal-header-id" class="title_25_circe_extra_bold_red_allcaps">
-                <p>Поздравлем!</p>
-            </div>
-            <div id='modal-text' class="rules-screen-body" style="margin-top: 20px;">
-                <p> Всё получилось. Ты - настоящая супергероиня праздника!</p>
-            </div>
-            <div class="modal-footer-gold hidden" style="margin-top: 20px;">
-                <button type="button" id="btn-modal-dialog-take-prize-gold" class="button-common button-common-327">Забрать промокод</button>                       
+
+        <div>               
+            <div class="button-right">
+                <div class="lose-screen-body win-screen-body">
+                    <p> Всё получилось. Ты - настоящая супергероиня праздника!</p>
+                </div>                
             </div>        
-        </div>
+            
+            <div class="button-right">            
+                <button id="exit-game-win" class="button-common button-common-280-red button-common-280-green">Забрать промокод</button>            
+            </div>
+        </div> 
+       
     </div>
     
     <div id="losegame" class="game-screen game-screen-lose">
         <div>               
             <div class="button-right">
-                <div class="win-screen-body">
+                <div class="lose-screen-body">
                     <p>Ой, быт оказался коварнее..</p>
                 </div>                
             </div>        
             
             <div class="button-right">            
-                <button id="exit-game-lose" class="button-common button-common-280">Попробовать снова</button>            
+                <button id="exit-game-lose" class="button-common button-common-280-red">Попробовать снова</button>            
             </div>
         </div>
     </div>
@@ -122,20 +124,12 @@
 <script>
 let isMusicPlay = true;
 
-let prizeDiscounteLevel = "0";
-const goldLevel = "GOLD";
-const silverLevel = "SILVER";
-const bronzeLevel = "BRONZE";
-
 let timerInterval = null;
 const SECONDS_FOR_ONE_QUESTION = 5;
 
 let audioMain = document.getElementById("audioMain");
 let audioWin = document.getElementById("audioWin");
 let audioTenQuestion = document.getElementById("audioTenQuestion");
-let availableQuestionsLight = window.questions_light ? [...window.questions_light] : [];
-let availableQuestionsHard = window.questions_hard ? [...window.questions_hard] : [];
-let question = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const portraitContainer = document.querySelector('#portrait-container');
@@ -177,30 +171,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('start-game').addEventListener('click', showTurnWarningScreen);
-document.getElementById('start-game2').addEventListener('click', showFinalScreen);
+document.getElementById('start-game2').addEventListener('click', showTurnWarningScreen);
 document.getElementById('continue-game').addEventListener('click', startGame);
 
 
 document.getElementById('show-rules').addEventListener('click', showRules);
 document.getElementById('music-off').addEventListener('click', switchMusic);
-
-
 document.getElementById('timer').textContent = SECONDS_FOR_ONE_QUESTION;
-document.getElementById("continue-game-btn").addEventListener("click", function () {
-    hideDialog(); // Скрыть диалог
-    continueGame(); // Продолжение игры
-});
-document.getElementById("return-game-button").addEventListener("click", hideDialogMisterSuHint);
-document.getElementById("return-game-button2").addEventListener("click", continueGame);
 
 document.getElementById("exit-game-lose").addEventListener("click", function () {
     //тут нужно закрывать игру с призом NONE
     hideDialog()
 });
-
-document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
-        button.addEventListener('click', () => useHint(button.dataset.hint));
-    });
 
     function showTurnWarningScreen() {
         document.getElementById("turn_screen_id").style.display = "block";
@@ -209,8 +191,7 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;
         audioTenQuestion.volume = 0.2;
-        audioMain.play();       
-        startTimer()
+        audioMain.play();               
     }
        
     function startGame() {
@@ -244,7 +225,7 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
                         document.getElementById('timer').innerText = timeLeft;                        
                     } else {
                         resetTimerForNextQuestion()
-                        showFinalScreen(false)                        
+                        showWinScreen(false)                        
                     }
                 }, 1000);
             }            
@@ -253,28 +234,7 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
         document.getElementById('timer').innerText = SECONDS_FOR_ONE_QUESTION;
         clearInterval(timerInterval);
         timerInterval = null
-    }    
-
-    function checkGameProgress () {
-        resetTimerForNextQuestion();  
-        
-        if (currentQuestion >= QUESTION_ALL) {            
-            showFinalScreen(true);
-            return;
-        }
-
-        switch (currentQuestion) {
-            case 4:
-                showModalDialog(bronzeLevel);                
-                break;           
-            case 8:                
-                showModalDialog(silverLevel);
-                break;
-            default: nextQuestion()                 
-        }        
-                
-    }     
-  
+    }       
 
     function switchMusic() {
     if (isMusicPlay) {
@@ -288,56 +248,14 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
     }
 }
 
-    function showFinalScreen(isWin) {
+    function showWinScreen() {        
         audioMain.pause()  
         audioTenQuestion.pause()                      
-        if(isWin) {            
-            audioWin.play()
-            showModalDialog(goldLevel);
-        } else {   
-            document.getElementById("game_screen_id").style.display = "none";
-            document.getElementById("losegame").style.display = "block";          
-        }         
-    }
-
-    // Показ модального окна
-    function showModalDialog(level) {
-
-        let textHeaderElement = document.getElementById('modal-header-id');
-        let modalTextElement = document.getElementById('modal-text');
-        let modalImage = document.getElementById('modal-image-pic');
+        audioWin.play()
         document.getElementById("game_screen_id").style.display = "none";
-        document.getElementById("сongratulations-dialogue").style.display = "block";
-
-        switch (level) {
-            case bronzeLevel:
-            textHeaderElement.textContent = 'Поздравляем!';
-            modalTextElement.textContent = 'Ты дошел до первой несгораемой остановки.Забираешь баллы или продолжаешь интеллектуальный вояж?';
-            modalImage.src = 'pic/shark_win.png';  
-            prizeDiscounteLevel = bronzeLevel;              
-                break;           
-            case silverLevel:            
-            textHeaderElement.textContent = 'Невероятно!';
-            modalTextElement.textContent = 'Ты уже на финишной прямой. Вторая несгораемая сумма в кармане. Остановимся и отпразднуем или идем на штурм главного приза?';
-            modalImage.src = 'pic/shark_win.png';
-            prizeDiscounteLevel = silverLevel;              
-                break;
-            case goldLevel:                            
-            document.getElementById('modal-footer-bronze-silver').style.display = 'none';
-            document.querySelector('.modal-footer-gold').classList.remove('hidden');
-            document.querySelector('.modal-footer-gold').style.display = 'flex';
-            document.querySelector('.modal-footer-gold').style.justifyContent = 'center';
-            textHeaderElement.textContent = 'Аплодисменты!';
-            modalTextElement.textContent = 'Это ПОБЕДА! 300 бонусных баллов отправляются в твою копилку ;) Твоя эрудиция глубже Марианской впадины, а скорость мышления быстрее сверхзвукового лайнера. Наслаждайся заслуженным триумфом!';
-            modalImage.src = 'pic/shark_win_with_cup.png';                    
-            prizeDiscounteLevel = goldLevel;              
-                break;    
-        }
-
-       
-    }    
-
-
+        document.getElementById("сongratulations-dialogue").style.display = "block";        
+    }
+ 
 // Скрытие модального окна
     function hideDialog() {
     document.getElementById('сongratulations-dialogue').style.display = "none";    
@@ -345,16 +263,6 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
     document.getElementById("game_screen_id").style.display = "block";    
     }
 
-// Функция продолжения игры
-    function continueGame() {
-        hideDialog(); // Скрыть диалог                   
-    }
-
-// Функция забрания приза
-    function claimPrize() {    
-    showFinalScreen(true)    
-    }   
-   
 </script>
 
 <script>
@@ -365,13 +273,9 @@ document.querySelectorAll('.btn-main-screen-hint').forEach(button => {
       tg.sendData("0");      
     });   
 
-    document.getElementById('btn-modal-dialog-take-prize-bronze-silver').addEventListener('click', function(){
-      tg.sendData(prizeDiscounteLevel);      
-    });   
-
-    document.getElementById('btn-modal-dialog-take-prize-gold').addEventListener('click', function(){
-      tg.sendData(prizeDiscounteLevel);      
-    });      
+    document.getElementById('exit-game-win').addEventListener('click', function(){
+      tg.sendData("1");      
+    });       
     
  </script>
 </body>
