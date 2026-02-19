@@ -20,12 +20,6 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
-<audio loop id="audioTenQuestion">
-    <source src="music/239084_10_question.mp3" type="audio/mpeg">    
-    Проигрывание музыки не поддерживается.
-</audio>
-
-
 
 <!-- Блок для портретной ориентации -->
 <div id="portrait-container" class="portrait-mode">
@@ -68,10 +62,7 @@
 </div>
     
 <!-- Блок для альбомной ориентации -->
-<div id="landscape-container" class="landscape-mode hidden">
-    <div>
-        <button id="toggle-button">Изменить ориентацию</button>
-    </div>
+<div id="landscape-container" class="landscape-mode hidden">   
 
     <div id = "turn_screen_id" class="game-screen game-screen-turn">
          <div class="modal-footer" style="margin-top: 260px;">            
@@ -85,8 +76,8 @@
                 <div class="timer-text" id="timer">0</div>
             </div>
             <div>
-                <button id="music-off" class="music-button">
-                    <img src="pic/sound_on.png" alt="turn_sound_pic">
+                <button id="music-icon" class="music-button">
+                    <img id="music_pic_id" src="pic/sound_on.png" alt="turn_sound_pic">
                 </button>
             </div>
         </div>
@@ -147,14 +138,10 @@
 
 
 <script>
-let isMusicPlay = true;
+
 
 let timerInterval = null;
 const SECONDS_FOR_ONE_GAME = 600;
-
-let audioMain = document.getElementById("audioMain");
-let audioWin = document.getElementById("audioWin");
-let audioTenQuestion = document.getElementById("audioTenQuestion");
 
 document.addEventListener('DOMContentLoaded', () => {
     const portraitContainer = document.querySelector('#portrait-container');
@@ -199,7 +186,6 @@ document.getElementById('start-game').addEventListener('click', showTurnWarningS
 document.getElementById('start-game2').addEventListener('click', showTurnWarningScreen);
 document.getElementById('continue-game').addEventListener('click', startGameScreen);
 document.getElementById('show-rules').addEventListener('click', showRules);
-document.getElementById('music-off').addEventListener('click', switchMusic);
 document.getElementById('timer').textContent = SECONDS_FOR_ONE_GAME;
 
 
@@ -211,33 +197,22 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     function showTurnWarningScreen() {
         document.getElementById("turn_screen_id").style.display = "block";
         document.getElementById('start-screen-id').style.display = "none";
-        document.getElementById('rules-screen-id').style.display = "none";                
-        audioMain.volume = 0.2;
-        audioWin.volume = 0.2;
-        audioTenQuestion.volume = 0.2;
-        audioMain.play();               
+        document.getElementById('rules-screen-id').style.display = "none";               
     }
        
     function startGameScreen() {
         document.getElementById("game_screen_id").style.display = "block";
         document.getElementById('start-screen-id').style.display = "none";
         document.getElementById("turn_screen_id").style.display = "none";
-        document.getElementById('rules-screen-id').style.display = "none";                
-        audioMain.volume = 0.2;
-        audioWin.volume = 0.2;
-        audioTenQuestion.volume = 0.2;
-        audioMain.play();     
+        document.getElementById('rules-screen-id').style.display = "none";                        
         startGame()  
-        /*startTimer()*/
+        
     }
 
     function showRules() {
         document.getElementById("rules-screen-id").style.display = "block";
-        document.getElementById('start-screen-id').style.display = "none";        
-        audioMain.volume = 0.2;
-        audioWin.volume = 0.2;
-        audioTenQuestion.volume = 0.2;
-        audioMain.play();               
+        document.getElementById('start-screen-id').style.display = "none";     
+                
     }    
     
     function resetTimerForNextQuestion() {        
@@ -245,19 +220,7 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         clearInterval(timerInterval);
         timerInterval = null
     }       
-
-    function switchMusic() {
-    if (isMusicPlay) {
-        audioMain.pause();
-        document.getElementById("music-icon").src = "pic/sound_pic_off.png";        
-        isMusicPlay = false;
-    } else {
-        audioMain.play();
-        document.getElementById("music-icon").src = "pic/sound_on.png";                
-        isMusicPlay = true;
-    }    
-    }  
-    
+        
  
 // Скрытие модального окна
     function hideDialog() {
@@ -272,10 +235,14 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     const gameScreen = document.getElementById("game_screen_id");
     const heroContainer = document.getElementById("hero_id");
     const enemyContainer = document.getElementById("enemy_id");
-    const timerText = document.getElementById("timer");
-    const musicOffBtn = document.getElementById("music-off");
+    const timerText = document.getElementById("timer");    
     const shoppingBtn = document.getElementById("shopping_button_id");
     const jumpBtn = document.getElementById("jump_button_id");
+    document.getElementById('music-icon').addEventListener('click', switchMusic);
+
+    let isMusicPlay = true;
+    let audioMain = document.getElementById("audioMain");
+    let audioWin = document.getElementById("audioWin");
 
     let isJumping = false;    
     let heroBottomOffset = 0;    
@@ -302,6 +269,9 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
 
     // Начинаем игру
     function startGame() {
+        audioMain.volume = 0.2;
+        audioWin.volume = 0.2;        
+        audioMain.play();     
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
         startTimer()
@@ -329,10 +299,8 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         }
 
     // Основные игровые процессы
-    function updateGameState() {  
-        
-        
-        
+    function updateGameState() {          
+                
         // Перемещение врага
         let increment = personages[currentPersonIndex].speed * accelerationFactor / 100 + 0.05;         
         enemyCoordinate += increment;
@@ -393,6 +361,18 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
             enemySpeed = newEnemy.speed; // Устанавливаем новую скорость 
             document.getElementById("enemy_pic_id").src = newEnemy.image;            
         }
+
+        function switchMusic() {
+            if (isMusicPlay) {
+                audioMain.pause();
+                document.getElementById("music_pic_id").src = "pic/sound_off.png";        
+                isMusicPlay = false;
+            } else {
+                audioMain.play();
+                document.getElementById("music_pic_id").src = "pic/sound_on.png";                
+                isMusicPlay = true;
+            }    
+        }  
 
         // Сброс состояния игры
         function resetGame() {
