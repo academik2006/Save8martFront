@@ -238,9 +238,18 @@ body {
     padding-right: 80px; /* Правый отступ */
 }
 
+.game-area {
+    display: flex;
+    justify-content: space-between; /* Горизонтальное распределение */
+    align-items: flex-end;          /* Прикрепляет элементы к нижней границе */
+    height: 210px;
+    width: calc(100% - 160px);
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
 .bottom_bar_conteiner {  
-    display: flex;   
-    margin-top: 250px; 
+    display: flex;       
     justify-content: space-between; /* Распределяет элементы по краям контейнера */    
     width: 100%; /* Контейнер занимает всю доступную ширину */    
 }
@@ -292,15 +301,13 @@ body {
 }
 
 .enemy-conteiner, .hero-conteiner {
-    position: absolute; /* Позиция абсолютная относительно родительского контейнера */
-    bottom: 0;          /* Граничат с низом экрана */
-    width: 50px;        /* Пример ширины персонажей */
-    height: 50px;       /* Пример высоты персонажей */
+    position: absolute; /* Позиция абсолютная относительно родительского контейнера */    
+    width: auto;        /* Пример ширины персонажей */
+    height: auto;       /* Пример высоты персонажей */
 }
 
 .enemy-conteiner {
-    left: 10px;         /* Слева возле левого края */
-    
+    left: 10px;         /* Слева возле левого края */    
 }
 
 .hero-conteiner {
@@ -308,8 +315,8 @@ body {
 }
 /* Индивидуальные размеры изображений */
 #enemy_id, #hero_id {
-    width: 50px;
-    height: 50px;
+    width: auto;
+    height: auto;
 }
 
 /* Прозрачность и скрытие персонажа при столкновениях */
@@ -318,8 +325,8 @@ body {
 }
 
 #jump_button_id img {
-    width: 50px;
-    height: 50px;
+    width: auto;
+    height: auto;
 }
 
 

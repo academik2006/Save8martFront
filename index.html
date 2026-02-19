@@ -91,16 +91,18 @@
             </div>
         </div>
 
-        <div id="enemy_id" class="enemy-conteiner">
-            <img id="enemy_pic_id" src="pic/man.png" alt="enemy_pic">
-        </div>
+        <div id="game_area_id" class="game-area">
+            <div id="enemy_id" class="enemy-conteiner">
+                <img id="enemy_pic_id" src="pic/man.png" alt="enemy_pic">
+            </div>
         
-        <div id="hero_id" class="hero-conteiner">
-            <img src="pic/wife_stay.png" alt="hero_pic">
+            <div id="hero_id" class="hero-conteiner">
+                <img src="pic/wife_stay.png" alt="hero_pic">
+            </div>
         </div>
-
+     
         <div class="bottom_bar_conteiner">
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 40px;">
                 <button id="shopping_button_id" class="button-common button-common-280-red button-common-280-green">Поехать на шопинг</button>
             </div>
             <div>
@@ -148,7 +150,7 @@
 let isMusicPlay = true;
 
 let timerInterval = null;
-const SECONDS_FOR_ONE_GAME = 50;
+const SECONDS_FOR_ONE_GAME = 600;
 
 let audioMain = document.getElementById("audioMain");
 let audioWin = document.getElementById("audioWin");
@@ -196,13 +198,10 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('start-game').addEventListener('click', showTurnWarningScreen);
 document.getElementById('start-game2').addEventListener('click', showTurnWarningScreen);
 document.getElementById('continue-game').addEventListener('click', startGameScreen);
-
-
 document.getElementById('show-rules').addEventListener('click', showRules);
 document.getElementById('music-off').addEventListener('click', switchMusic);
 document.getElementById('timer').textContent = SECONDS_FOR_ONE_GAME;
-/*document.getElementById('jump_button_id').addEventListener('click', heroJump);*/
-/*document.getElementById('shopping_button_id').addEventListener('click', goShoping);*/
+
 
 document.getElementById("exit-game-lose").addEventListener("click", function () {
     //тут нужно закрывать игру с призом NONE
@@ -279,31 +278,32 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     const jumpBtn = document.getElementById("jump_button_id");
 
     let isJumping = false;    
-    let heroBottomOffset = 0;
-    let remainingTime = 60; // Игровая продолжительность 1 мин
+    let heroBottomOffset = 0;    
     let gameInterval;
+    const accelerationFactor = 1.3;
+    let enemyCoordinate = 0;
 
-    let enemiesList = [
-    { type: 'man', speed: 3, height: 10, image: 'pic/man.png' },
-    { type: 'elderSon', speed: 6, height: 8, image: 'pic/big_sun.png' },
-    { type: 'youngerSon', speed: 7, height: 6, image: 'pic/little_sun.png' },
-    { type: 'daughter', speed: 5, height: 3, image: 'pic/daughter.png' },
-    { type: 'fish', speed: 8, height: 2, image: 'pic/fish.png' },
-    { type: 'cat', speed: 10, height: 1, image: 'pic/cat.png' }
+    let personages = [    
+    { type: 'man', speed: 3, height: 172, image: 'pic/man.png' },
+    { type: 'elderSon', speed: 6, height: 138, image: 'pic/big_sun.png' },
+    { type: 'youngerSon', speed: 7, height: 122, image: 'pic/little_sun.png' },
+    { type: 'daughter', speed: 5, height: 87, image: 'pic/daughter.png' },
+    { type: 'fish', speed: 8, height: 45, image: 'pic/fish.png' },
+    { type: 'cat', speed: 10, height: 73, image: 'pic/cat.png' }
     ];
   
 
     // Ищем индекс элемента 'man' в массиве
-    let currentEnemyIndex = enemiesList.findIndex(enemy => enemy.type === 'man');
+    let currentPersonIndex = personages.findIndex(person => person.type === 'man');
     
-    if (currentEnemyIndex === -1) {
-        currentEnemyIndex = 0;
+    if (currentPersonIndex === -1) {
+        currentPersonIndex = 0;
     }
 
     // Начинаем игру
     function startGame() {
         resetGame();
-        gameInterval = setInterval(updateGameState, 200);
+        gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
         startTimer()
     }
 
@@ -329,26 +329,34 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         }
 
     // Основные игровые процессы
-    function updateGameState() {        
+    function updateGameState() {  
+        
+        
         
         // Перемещение врага
-        enemyContainer.style.left = `${enemiesList[currentEnemyIndex].speed += 2}%`;
-
+        let increment = personages[currentPersonIndex].speed * accelerationFactor / 100 + 0.05;         
+        enemyCoordinate += increment;
+        enemyContainer.style.left = `${enemyCoordinate}%`;   
+                
         // Проверка достижения конца экрана
         if (parseInt(enemyContainer.style.left.split("%")[0]) >= 100) {
             changeEnemy(); // Заменяем врага на следующего
         }
 
         // Обработка прыжков
+        
             if (isJumping) {
-                heroBottomOffset += 12;
+                /*
+                heroBottomOffset += 2;
                 heroContainer.style.bottom = `${heroBottomOffset}px`;
                 setTimeout(() => {
-                    heroBottomOffset -= 12;
+                    heroBottomOffset -= 2;
                     heroContainer.style.bottom = `${heroBottomOffset}px`;
                     isJumping = false;
                 }, 1000);
+                */
             }
+                
 
             // Обнаружение столкновения
             /*
@@ -378,24 +386,20 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         };
 
         function changeEnemy() {
-            currentEnemyIndex = (currentEnemyIndex + 1) % enemiesList.length;
-            let newEnemy = enemiesList[currentEnemyIndex];
-            enemyContainer.style.left = "0%"; // Возвращаем врага в начало
-            /*enemyContainer.style.bottom = `${canvas.height - newEnemy.height}px`; // Устанавливаем новую высоту*/
+            currentPersonIndex = (currentPersonIndex + 1) % personages.length;
+            let newEnemy = personages[currentPersonIndex];
+            enemyCoordinate = 0;
+            enemyContainer.style.left = "0%"; // Возвращаем врага в начало                                   
             enemySpeed = newEnemy.speed; // Устанавливаем новую скорость 
-            document.getElementById("enemy_pic_id").src = newEnemy.image;           
-
-            
-            
+            document.getElementById("enemy_pic_id").src = newEnemy.image;            
         }
 
         // Сброс состояния игры
         function resetGame() {
-            isJumping = false;
-            enemySpeed = 1;
-            heroBottomOffset = 0;
-            remainingTime = 60;
-            heroContainer.style.bottom = "0px";
+            isJumping = false;            
+            heroBottomOffset = 0;   
+            /*enemyContainer.style.position = 'absolute';
+            enemyContainer.style.bottom = `${172}px`;                     */
             enemyContainer.style.left = "0%";
         }
         
