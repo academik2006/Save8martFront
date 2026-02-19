@@ -76,7 +76,7 @@
                 <div class="timer-text" id="timer">0</div>
             </div>
             <div>
-                <button id="music-icon" class="music-button">
+                <button id="music-icon" style="margin-right: 20px;" class="music-button">
                     <img id="music_pic_id" src="pic/sound_on.png" alt="turn_sound_pic">
                 </button>
             </div>
@@ -88,16 +88,16 @@
             </div>
         
             <div id="hero_id" class="hero-conteiner">
-                <img src="pic/wife_stay.png" alt="hero_pic">
+                <img id="hero_image_id" src="pic/wife_stay.png" alt="hero_pic">
             </div>
         </div>
      
         <div class="bottom_bar_conteiner">
-            <div style="margin-top: 40px;">
+            <div style="margin-top: 20px; margin-left: 20px;">
                 <button id="shopping_button_id" class="button-common button-common-280-red button-common-280-green">Поехать на шопинг</button>
             </div>
             <div>
-                <button id="jump_button_id" class="music-button">
+                <button id="jump_button_id" class="jump-button">
                     <img src="pic/jump.png" alt="jump_pic">
                 </button>
             </div>
@@ -129,7 +129,7 @@
             </div>        
             
             <div class="button-right">            
-                <button id="exit-game-lose" class="button-common button-common-280-red">Попробовать снова</button>            
+                <button id="restart-game-lose" class="button-common button-common-280-red">Попробовать снова</button>            
             </div>
         </div>
     </div>
@@ -189,9 +189,10 @@ document.getElementById('show-rules').addEventListener('click', showRules);
 document.getElementById('timer').textContent = SECONDS_FOR_ONE_GAME;
 
 
-document.getElementById("exit-game-lose").addEventListener("click", function () {
+document.getElementById("restart-game-lose").addEventListener("click", function () {
     //тут нужно закрывать игру с призом NONE
     hideDialog()
+    startGame()
 });
 
     function showTurnWarningScreen() {
@@ -238,7 +239,9 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     const timerText = document.getElementById("timer");    
     const shoppingBtn = document.getElementById("shopping_button_id");
     const jumpBtn = document.getElementById("jump_button_id");
+    const heroImage = document.querySelector('.hero-conteiner img');
     document.getElementById('music-icon').addEventListener('click', switchMusic);
+    let heroImg = document.getElementById("hero_image_id");
 
     let isMusicPlay = true;
     let audioMain = document.getElementById("audioMain");
@@ -247,40 +250,62 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     let isJumping = false;    
     let heroBottomOffset = 0;    
     let gameInterval;
-    const accelerationFactor = 1.3;
+    let newEnemy;
+    let heroY;
+    const accelerationFactor = 1.5;
+    const wifiHeight = 151;
+    const screenHeightY = 734;
     let enemyCoordinate = 0;
 
     let personages = [    
-    { type: 'man', speed: 3, height: 172, image: 'pic/man.png' },
-    { type: 'elderSon', speed: 6, height: 138, image: 'pic/big_sun.png' },
-    { type: 'youngerSon', speed: 7, height: 122, image: 'pic/little_sun.png' },
-    { type: 'daughter', speed: 5, height: 87, image: 'pic/daughter.png' },
-    { type: 'fish', speed: 8, height: 45, image: 'pic/fish.png' },
-    { type: 'cat', speed: 10, height: 73, image: 'pic/cat.png' }
+        { type: 'man', speed: 3, height: 172, image: 'pic/man.png' },
+        { type: 'elderSon', speed: 6, height: 138, image: 'pic/big_sun.png' },
+        { type: 'youngerSon', speed: 7, height: 122, image: 'pic/little_sun.png' },
+        { type: 'daughter', speed: 5, height: 87, image: 'pic/daughter.png' },
+        { type: 'fish', speed: 8, height: 45, image: 'pic/fish.png' },
+        { type: 'cat', speed: 10, height: 73, image: 'pic/cat.png' }
     ];
   
 
     // Ищем индекс элемента 'man' в массиве
-    let currentPersonIndex = personages.findIndex(person => person.type === 'man');
-    
+    let currentPersonIndex = personages.findIndex(person => person.type === 'cat');
+        
     if (currentPersonIndex === -1) {
         currentPersonIndex = 0;
     }
+    newEnemy = personages[currentPersonIndex]
+    document.getElementById("enemy_pic_id").src = newEnemy.image;            
+
+    function setHeroBottomOffset() {  
+
+        let heroCont = document.getElementById("hero_id");
+
+        // Получаем координаты контейнера
+        let rect = heroCont.getBoundingClientRect();
+
+        // Координата нижней границы контейнера относительно viewport
+        let absoluteBottom = rect.bottom + window.scrollY;
+        
+        console.log('Базовая позиция внизу:', absoluteBottom);
+        return screenHeightY - absoluteBottom + wifiHeight;
+}
 
     // Начинаем игру
     function startGame() {
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;        
-        audioMain.play();     
+        /*audioMain.play();     */
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
+        heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу
+        console.log('Начальная позиция героя', heroBottomOffset); 
         startTimer()
     }
 
     // Завершение игры
     function endGame() {
         clearInterval(gameInterval);
-        showWinScreen()
+        showLoseScreen()        
     }
 
     function startTimer() {
@@ -302,7 +327,7 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
     function updateGameState() {          
                 
         // Перемещение врага
-        let increment = personages[currentPersonIndex].speed * accelerationFactor / 100 + 0.05;         
+        let increment = newEnemy.speed * accelerationFactor / 100 + 0.05;         
         enemyCoordinate += increment;
         enemyContainer.style.left = `${enemyCoordinate}%`;   
                 
@@ -313,29 +338,64 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
 
         // Обработка прыжков
         
-            if (isJumping) {
-                /*
-                heroBottomOffset += 2;
+            if (isJumping) {                
+                isJumping = true;
+                heroBottomOffset += 4;
                 heroContainer.style.bottom = `${heroBottomOffset}px`;
-                setTimeout(() => {
-                    heroBottomOffset -= 2;
-                    heroContainer.style.bottom = `${heroBottomOffset}px`;
-                    isJumping = false;
-                }, 1000);
-                */
-            }
-                
+                heroY = `${heroBottomOffset}px`;
 
-            // Обнаружение столкновения
-            /*
-            if (
-                parseInt(enemyContainer.style.left.split("%")[0]) >
-                (parseInt(heroContainer.style.right.split("%")[0]) || 0)
-            ) {
-                alert("Вы столкнулись с врагом! Игра закончена.");
-                endGame();
+                // Ждем немного (верхняя точка прыжка)
+                setTimeout(() => {
+                    heroImg.src = "pic/wife_jump.png"; // Меняем картинку в наивысшей точке прыжка            
+                    heroY = `${heroBottomOffset}px`;
+                    // Начинаем спуск
+                setTimeout(() => {
+                    heroY = `${heroBottomOffset}px`;
+                    heroBottomOffset -= 4;
+                    heroContainer.style.bottom = `${heroBottomOffset}px`;
+                    heroImg.src = "pic/wife_stay.png"; // Возвращаем исходную картинку
+                    isJumping = false;
+                    heroY = `${heroBottomOffset}px`;
+                    } , 250); // Время падения примерно вдвое меньше подъема
+                }, 250); // Верхняя точка наступает спустя половину общего времени прыжка
+                
             }
-                */
+            
+            checkColision()          
+            
+        }
+
+        function checkColision () {
+             // Предположим, высота игрока равна heroHeight, а высота врага — enemyHeight
+            // Также предполагаем, что verticalOffset — это текущая вертикальная позиция игрока
+            // Текущие координаты игроков получаються через left/right styles
+
+            let enemyX = parseFloat(enemyContainer.style.left) || 0;
+            let heroX = 73;
+            let verticalOffset = parseFloat(heroY) || 0;
+            let enemyHeight = newEnemy.height            
+            console.log('Высота текущего врага:', enemyHeight);
+            console.log('Высота героя:', verticalOffset);
+            
+
+            // Определяем зону столкновения по оси X
+            const collisionRangeStart = 70; // % начало зоны
+            const collisionRangeEnd = 80;   // % конец зоны
+
+            // Проверяем попадание персонажа в зону столкновения по оси X
+            if (enemyX >= collisionRangeStart && enemyX <= collisionRangeEnd) {
+            // Внутри зоны по оси X, теперь проверим вертикальную ось Y
+                if (verticalOffset > enemyHeight) {
+                // Игрок выше врага, следовательно, столкновения нет
+                console.log("Игрок пролетел над врагом.");
+                } else {                    
+                    console.log("Игрок пролетел над врагом.");
+                    endGame();
+                    }
+            } else {
+            // Враг вне зоны столкновения по оси X
+            console.log("Нет столкновения, враг далеко.");
+            }                          
         }
 
         // Реакция на клик кнопки прыжка
@@ -355,7 +415,7 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
 
         function changeEnemy() {
             currentPersonIndex = (currentPersonIndex + 1) % personages.length;
-            let newEnemy = personages[currentPersonIndex];
+            newEnemy = personages[currentPersonIndex];
             enemyCoordinate = 0;
             enemyContainer.style.left = "0%"; // Возвращаем врага в начало                                   
             enemySpeed = newEnemy.speed; // Устанавливаем новую скорость 
@@ -375,20 +435,24 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
         }  
 
         // Сброс состояния игры
-        function resetGame() {
-            isJumping = false;            
-            heroBottomOffset = 0;   
-            /*enemyContainer.style.position = 'absolute';
-            enemyContainer.style.bottom = `${172}px`;                     */
+        function resetGame() {            
+            isJumping = false;                        
+            timerInterval = null;
+            enemyCoordinate = 0;
             enemyContainer.style.left = "0%";
         }
         
         function showWinScreen() {        
-        audioMain.pause()  
-        audioTenQuestion.pause()                      
+        audioMain.pause()          
         audioWin.play()
         document.getElementById("game_screen_id").style.display = "none";
         document.getElementById("сongratulations-dialogue").style.display = "block";        
+        }
+
+        function showLoseScreen() {        
+        audioMain.pause()                  
+        document.getElementById("game_screen_id").style.display = "none";
+        document.getElementById("losegame").style.display = "block";        
         }
 
     </script>
@@ -396,10 +460,13 @@ document.getElementById("exit-game-lose").addEventListener("click", function () 
 <script>
     let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
     tg.expand(); //расширяем на все окно     
+
+    /*
           
     document.getElementById('exit-game-lose').addEventListener('click', function(){
       tg.sendData("0");      
     });   
+    */
 
     document.getElementById('exit-game-win').addEventListener('click', function(){
       tg.sendData("1");      

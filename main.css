@@ -11,7 +11,7 @@ body {
     font-family: 'CirceRegular', Arial, sans-serif;    
     background-color: #f0f0f0;
     margin: 0;
-    padding: 20px;
+    padding: 0px;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -36,8 +36,6 @@ body {
 .landscape-mode {    
     font-family: 'CirceRegular', Arial, sans-serif;    
     background-color: #f0f0f0;
-    margin: 0;
-    padding: 20px;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -113,8 +111,7 @@ body {
     display: none; /* Скрываем диалог по умолчанию */            
     width: 734px; 
     height: 375px;      
-    z-index: 1000;
-    padding: 40px;
+    z-index: 1000;    
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
     background-image: url('pic/bg_game.jpg'); /* Путь к изображению */
@@ -224,32 +221,25 @@ body {
 }
 
 .top_bar_conteiner {  
-    display: flex;    
+    margin-top: 20px;
+    display: flex;   
     justify-content: space-between; /* Распределяет элементы по краям контейнера */    
+    align-items: center;
     width: 100%; /* Контейнер занимает всю доступную ширину */    
-}
-
-.middle_bar_conteiner {
-    display: flex;
-    margin-top: 30px;
-    justify-content: space-between; /* Распределяет элементы по краям контейнера */
-    width: calc(100% - 160px); /* Уменьшаем ширину на величину обоих отступов */
-    padding-left: 80px; /* Левый отступ */
-    padding-right: 80px; /* Правый отступ */
 }
 
 .game-area {
     display: flex;
     justify-content: space-between; /* Горизонтальное распределение */
     align-items: flex-end;          /* Прикрепляет элементы к нижней границе */
-    height: 210px;
-    width: calc(100% - 160px);
-    padding-left: 80px;
-    padding-right: 80px;
+    height: 170px;    
+    width: 100%;    
 }
 
-.bottom_bar_conteiner {  
-    display: flex;       
+.bottom_bar_conteiner {      
+    display: flex;      
+    margin-bottom: 30px;
+    align-items: center; 
     justify-content: space-between; /* Распределяет элементы по краям контейнера */    
     width: 100%; /* Контейнер занимает всю доступную ширину */    
 }
@@ -264,9 +254,24 @@ body {
 .music-button {   
     height: 65px;
     width: 65px; 
-    display: flex;
+    display: flex;    
     justify-content: center;
     align-items: center;                    
+    outline: none;             /* Удаление контура при фокусировке */
+    cursor: pointer;          /* Курсор вида 'рука' при наведении */
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+    box-shadow: none;
+    border: none;    
+}
+
+.jump-button {   
+    height: 50px;
+    width: 50px;    
+    margin-right: 40px;    
+    display: flex;    
+    justify-content: center;
+    align-items: center;                   
     outline: none;             /* Удаление контура при фокусировке */
     cursor: pointer;          /* Курсор вида 'рука' при наведении */
     background-color: transparent;
@@ -292,6 +297,7 @@ body {
     width: 65px; /* Автоматически определит необходимую ширину */
     height: 65px; /* То же самое для высоты */
     display: flex;
+    margin-left: 20px;
     justify-content: center; /* Горизонтальное выравнивание по центру */
     align-items: center;
     background-image: url('pic/timer.png');    
@@ -307,11 +313,11 @@ body {
 }
 
 .enemy-conteiner {
-    left: 10px;         /* Слева возле левого края */    
+    left: 0px;         /* Слева возле левого края */    
 }
 
 .hero-conteiner {
-    right: 10px;        /* Справа возле правого края */    
+    right: 140px;        /* Справа возле правого края */    
 }
 /* Индивидуальные размеры изображений */
 #enemy_id, #hero_id {
