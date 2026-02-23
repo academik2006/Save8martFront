@@ -43,16 +43,6 @@ body {
     height: 100vh; 
 }
 
-/* По умолчанию прячем кнопку старта в портретной ориентации */
-.start-btn-in-portrait {
-    display: none;
-}
-
-/* Показываем кнопку старта в альбомной ориентации */
-.landscape-mode .start-btn-in-landscape {
-    display: block;
-}
-
 .hidden {
     display: none !important;
 }
