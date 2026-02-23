@@ -23,10 +23,7 @@
 
 <!-- Блок для портретной ориентации -->
 <div id="portrait-container" class="portrait-mode">
-    <div>
-        <button id="toggle-button">Изменить ориентацию</button>
-    </div>
-    
+        
     <div id = "start-screen-id" class="start-screen">
         <div>        
             <div class="image-start-screen" style="margin-top: 350px;">            
@@ -59,15 +56,23 @@
         </div>   
     </div>
 
+    <div id="turn_screen_id" class="game-screen game-screen-turn-port">
+        <div class="modal-footer" style="margin-top: 260px;">
+            <!-- Эта кнопка будет скрыта в портретной ориентации -->
+            <button id="continue-game" class="button-common button-common-rules hidden">Старт</button>
+        </div>
+    </div>
+
 </div>
     
 <!-- Блок для альбомной ориентации -->
 <div id="landscape-container" class="landscape-mode hidden">   
 
-    <div id = "turn_screen_id" class="game-screen game-screen-turn">
-         <div class="modal-footer" style="margin-top: 260px;">            
-                <button id="continue-game" class="button-common button-common-rules">Старт</button>      
-            </div>        
+    <div id="turn_screen_id" class="game-screen game-screen-turn-albom">
+        <div class="modal-footer" style="margin-top: 260px;">
+            <!-- Эта кнопка будет показана только в альбомной ориентации -->
+            <button id="continue-game" class="button-common button-common-rules">Старт</button>
+        </div>
     </div>
 
     <div id="game_screen_id" class="game-screen">
@@ -160,26 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Регистрация прослушивания изменений ориентации
     window.addEventListener('resize', handleOrientationChange);
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.querySelector('#toggle-button');
-    let isPortraitMode = false;
-
-    toggleButton.addEventListener('click', () => {
-        const portraitContainer = document.querySelector('#portrait-container');
-        const landscapeContainer = document.querySelector('#landscape-container');
-
-        if (isPortraitMode) {
-            portraitContainer.classList.remove('hidden');
-            landscapeContainer.classList.add('hidden');
-            isPortraitMode = false;
-        } else {
-            portraitContainer.classList.add('hidden');
-            landscapeContainer.classList.remove('hidden');
-            isPortraitMode = true;
-        }
-    });
 });
 
 document.getElementById('start-game').addEventListener('click', showTurnWarningScreen);

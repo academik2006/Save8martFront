@@ -43,6 +43,16 @@ body {
     height: 100vh; 
 }
 
+/* По умолчанию прячем кнопку старта в портретной ориентации */
+.start-btn-in-portrait {
+    display: none;
+}
+
+/* Показываем кнопку старта в альбомной ориентации */
+.landscape-mode .start-btn-in-landscape {
+    display: block;
+}
+
 .hidden {
     display: none !important;
 }
@@ -120,9 +130,18 @@ body {
     background-repeat: no-repeat; /* Изображение не повторяется */
 }    
 
-.game-screen-turn {
+.game-screen-turn-port {
+    width: 375px; 
+    height: 734px;   
     background-image: url('pic/bg_turn_screen.jpg'); /* Путь к изображению */    
 } 
+
+.game-screen-turn-albom {
+    width: 734px; 
+    height: 375px;   
+    background-image: url('pic/bg_turn_screen.jpg'); /* Путь к изображению */    
+} 
+
 
 .game-screen-win {
     background-image: url('pic/bg_win.jpg'); /* Путь к изображению */    
