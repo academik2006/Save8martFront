@@ -56,19 +56,14 @@
         </div>   
     </div>
 
-    <div id="turn_screen_id" class="game-screen game-screen-turn-port">
-        <div class="modal-footer" style="margin-top: 260px;">
-            <!-- Эта кнопка будет скрыта в портретной ориентации -->
-            <button id="continue-game" class="button-common button-common-rules">Старт</button>
-        </div>
-    </div>
+    <div id="turn_screen_id" class="game-screen game-screen-turn-port"> </div>
 
 </div>
     
 <!-- Блок для альбомной ориентации -->
 <div id="landscape-container" class="landscape-mode hidden">   
 
-    <div id="turn_screen_id" class="game-screen game-screen-turn-albom">
+    <div id="turn_screen_land_id" class="game-screen game-screen-turn-albom">
         <div class="modal-footer" style="margin-top: 260px;">
             <!-- Эта кнопка будет показана только в альбомной ориентации -->
             <button id="continue-game" class="button-common button-common-rules">Старт</button>
@@ -182,6 +177,8 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 
     function showTurnWarningScreen() {
         document.getElementById("turn_screen_id").style.display = "block";
+        document.getElementById("turn_screen_land_id").style.display = "block";
+        
         document.getElementById('start-screen-id').style.display = "none";
         document.getElementById('rules-screen-id').style.display = "none";               
     }
@@ -190,6 +187,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         document.getElementById("game_screen_id").style.display = "block";
         document.getElementById('start-screen-id').style.display = "none";
         document.getElementById("turn_screen_id").style.display = "none";
+        document.getElementById("turn_screen_land_id").style.display = "none";        
         document.getElementById('rules-screen-id').style.display = "none";                        
         startGame()  
         

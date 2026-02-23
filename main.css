@@ -127,7 +127,8 @@ body {
 } 
 
 .game-screen-turn-albom {
-    width: 734px; 
+    display: block;
+    width: 734px;
     height: 375px;   
     background-image: url('pic/bg_turn_screen.jpg'); /* Путь к изображению */    
 } 
