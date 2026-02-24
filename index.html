@@ -25,6 +25,11 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
+<audio loop id="audioLose">
+    <source src="music/lose_audio.mp3" type="audio/mpeg">        
+    Проигрывание музыки не поддерживается.
+</audio>
+
 <audio id="audioJumping">
     <source src="music/jump.mp3" type="audio/mpeg">        
     Проигрывание музыки не поддерживается.
@@ -118,7 +123,7 @@
 
     <div id="сongratulations-dialogue" class="game-screen game-screen-win">
 
-        <div>               
+        <div style="margin-right: 20px;">               
             <div class="button-right">
                 <div class="lose-screen-body win-screen-body">
                     <p> Всё получилось. Ты - настоящая супергероиня праздника!</p>
@@ -240,6 +245,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 
     let isMusicPlay = true;
     let audioMain = document.getElementById("audioMain");
+    let audioLose = document.getElementById("audioLose");
     let audioWin = document.getElementById("audioWin");
     let audioShoping = document.getElementById("audioShoping");
     let audioJumping = document.getElementById("audioJumping");
@@ -290,15 +296,17 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 }
 
     // Начинаем игру
-    function startGame() {
+    function startGame() {        
         audioMain.volume = 0.2;
-        audioWin.volume = 0.2;        
-        audioMain.play();     
+        audioWin.volume = 0.2;                
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
         heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу
         console.log('Начальная позиция героя', heroBottomOffset); 
         startTimer()
+        if(isMusicPlay) {
+            audioMain.play();     
+        }
     }
 
     // Завершение игры
@@ -471,6 +479,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         // Сброс состояния игры
         function resetGame() {    
             stopTimer();
+            audioLose.pause();
             shoppingBtn.disabled = false;        
             isJumping = false;           
             enemyCoordinate = 0;
@@ -485,7 +494,10 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         }
 
         function showLoseScreen() {        
-        audioMain.pause()                  
+        audioMain.pause();
+        if(isMusicPlay) {
+            audioLose.play()
+        }                  
         document.getElementById("game_screen_id").style.display = "none";
         document.getElementById("losegame").style.display = "block";        
         }
