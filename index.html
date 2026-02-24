@@ -11,7 +11,7 @@
 <body>
 
 <audio loop id="audioMain">
-    <source src="music/main_theme_8_save.mp3" type="audio/mpeg">    
+    <source src="music/main_2.mp3" type="audio/mpeg">    
     Проигрывание музыки не поддерживается.
 </audio>
 
@@ -105,7 +105,7 @@
         </div>
      
         <div class="bottom_bar_conteiner">
-            <div style="margin-top: 20px; margin-left: 20px;">
+            <div style="margin-top: 40px; margin-left: 20px;">
                 <button id="shopping_button_id" class="button-common button-common-280-red button-common-280-green">Поехать на шопинг</button>
             </div>
             <div>
@@ -133,7 +133,7 @@
     </div>
     
     <div id="losegame" class="game-screen game-screen-lose">
-        <div>               
+        <div style="margin-right: 20px;">               
             <div class="button-right">
                 <div class="lose-screen-body">
                     <p>Ой, быт оказался коварнее..</p>
@@ -246,6 +246,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     
 
     let isJumping = false;    
+    let isShoping = false;    
     let heroBottomOffset = 0;    
     let gameInterval;
     let newEnemy;
@@ -319,7 +320,12 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
                     }
                 }, 1000);
             }            
-        }
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null; 
+    }
 
     // Основные игровые процессы
     function updateGameState() {          
@@ -335,9 +341,11 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         }
 
         if (isJumping) {                                
-            heroJump()                
+            heroJump();                
         }
-        checkColision()          
+        if(isShoping == false) {
+            checkColision();
+        }        
             
     }
 
@@ -420,6 +428,10 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         };
 
         function goShoping () {
+            
+            isShoping = true;
+            shoppingBtn.disabled = true;
+
             if(isMusicPlay) {
                 audioMain.pause()          
                 audioShoping.play() 
@@ -428,20 +440,20 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             heroContainer.classList.add("hide_herro_anination");
             setTimeout(() => {
                 heroContainer.classList.remove("hide_herro_anination");
-                if(isMusicPlay){
-                    
+                if(isMusicPlay){                    
                     audioMain.play()
-                }                
+                }
+                isShoping = false;                
             }, 5000);            
         }
 
         function changeEnemy() {
-            const randomIndex = Math.floor(Math.random() * personages.length);
-            newEnemy = personages[randomIndex];    
+            currentPersonIndex = (currentPersonIndex + 1) % personages.length;
+            newEnemy = personages[currentPersonIndex];
             enemyCoordinate = 0;
-            enemyContainer.style.left = "0%"; // Возвращаем врага в начало     
-            enemySpeed = newEnemy.speed; // Устанавливаем новую скорость 
-            document.getElementById("enemy_pic_id").src = newEnemy.image;            
+            enemyContainer.style.left = "0%";
+            enemySpeed = newEnemy.speed;
+            document.getElementById("enemy_pic_id").src = newEnemy.image;        
         }
 
         function switchMusic() {
@@ -457,9 +469,10 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         }  
 
         // Сброс состояния игры
-        function resetGame() {            
-            isJumping = false;                        
-            timerInterval = null;
+        function resetGame() {    
+            stopTimer();
+            shoppingBtn.disabled = false;        
+            isJumping = false;           
             enemyCoordinate = 0;
             enemyContainer.style.left = "0%";
         }

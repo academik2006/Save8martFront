@@ -94,7 +94,7 @@ body {
     display: flex;
     justify-content: center;   
     text-align: center;   
-    margin-top: 220px;    
+    margin-top: 220px;        
     padding: 5px;    
     background-color:burlywood;
     border: 2px solid brown; /* Добавлен стиль границы */
@@ -180,6 +180,13 @@ body {
 
 .button-common-280-green {    
     background-color: green;
+}
+
+.button-common-280-green:disabled {        
+    cursor: not-allowed;     /* Курсор меняет форму на "недоступно" */
+    box-shadow: none;         /* Убираем тени и эффекты */
+    pointer-events: none;    /* Предотвращаем любые взаимодействия с кнопкой */
+    opacity: 0.5;
 }
 
 
