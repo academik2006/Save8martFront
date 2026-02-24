@@ -357,36 +357,13 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     ];
 
     let currentPersonIndex = personages.findIndex(person => person.type === 'cat');
-        
-    if (currentPersonIndex === -1) {
-        currentPersonIndex = 0;
-    }   
-           
-
-    function setHeroBottomOffset() {  
-
-        let heroCont = document.getElementById("hero_id");
-
-        // Получаем координаты контейнера
-        let rect = heroCont.getBoundingClientRect();
-
-        console.log('Базовые координаты контейнера:', rect);
-
-        // Координата нижней границы контейнера относительно viewport
-        let absoluteBottom = rect.bottom + window.scrollY;
-        console.log('Базовые координаты нижней границы контейнера:', absoluteBottom);
-        
-        console.log('Базовая позиция героя:', screenHeightY - absoluteBottom + wifeHeight);
-        return screenHeightY - absoluteBottom + wifeHeight;
-}
-
+         
     // Начинаем игру
     function startGame() {        
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;          
         resetGame();
-        gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
-        /*heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу        */
+        gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)        
         startTimer()
         if(isMusicPlay) {
             audioMain.play();     
@@ -423,7 +400,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     function updateGameState() {          
                 
         // Перемещение врага
-        let increment = newEnemy.speed * accelerationFactor / 100 + 0.05;         
+        let increment = newEnemy.speed * accelerationFactor / 25 + 0.1;         
         enemyCoordinate += increment;
         enemyContainer.style.left = `${enemyCoordinate}%`;   
                 
@@ -436,7 +413,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             heroJump();                
         }
         if(isShoping == false) {
-            checkColision();
+            checkCollision()
         }        
             
     }
@@ -481,22 +458,34 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     }
 
     function checkCollision() {
-    // Координаты и размеры героев
-        let enemyRect = enemyContainer.getBoundingClientRect(); // Прямоугольник врага
-        let heroRect = heroContainer.getBoundingClientRect();   // Прямоугольник героя
+        let heroRect = heroContainer.getBoundingClientRect();
+        let enemyRect = enemyContainer.getBoundingClientRect();        
+        
+        // Проверяем пересечение по горизонтали и вертикали
+        if (-10 <= enemyRect.x - heroRect.x && enemyRect.x - heroRect.x <= 10) {
+            if(enemyRect.top - heroRect.bottom > 40){
+                console.log("Перепрыгнули!", enemyRect.top - heroRect.bottom);                
+            }
+            else {                
+                console.log("Столкновение!", enemyRect.top - heroRect.bottom);                
+            }
+        }     
+    }
 
-        // Проверяем столкновение прямоугольников
-        if (
-            heroRect.x < enemyRect.x + enemyRect.width &&
-            heroRect.x + heroRect.width > enemyRect.x &&
-            heroRect.y < enemyRect.y + enemyRect.height &&
-            heroRect.y + heroRect.height > enemyRect.y
-        ) {
-            console.log("Столкновение, конец игры");
-            endGame();
-        } else {
-        console.log("Нет столкновения, враг далеко.");
-        }
+    // Функция для отметки места столкновения
+    function markCollisionPoint() {
+        let collisionMarker = document.createElement('img');
+        collisionMarker.src = 'pic/oops.png'; // Картинка для обозначения удара
+        collisionMarker.style.position = 'absolute';
+        collisionMarker.style.zIndex = '1000'; // Убедимся, что она поверх остальных элементов
+        collisionMarker.style.left = `${enemyRect.x}px`;
+        collisionMarker.style.top = `${enemyRect.y}px`;
+        document.body.appendChild(collisionMarker);
+
+        // Автоматически уберём маркер через короткое время
+        setTimeout(() => {
+            document.body.removeChild(collisionMarker);
+        }, 1000); // Держим изображение 1 секунду
     }
 
         // Реакция на клик кнопки прыжка
@@ -511,17 +500,17 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
            goShoping()
         };
 
-        function goShoping () {
+    function goShoping () {
             
-            isShoping = true;
-            shoppingBtn.disabled = true;
+        isShoping = true;
+        shoppingBtn.disabled = true;
 
-            if(isMusicPlay) {
-                audioMain.pause()          
-                audioShoping.play() 
-            }                        
+        if(isMusicPlay) {
+            audioMain.pause()          
+            audioShoping.play() 
+        }                        
 
-            heroContainer.classList.add("hide_herro_anination");
+        heroContainer.classList.add("hide_herro_anination");
             setTimeout(() => {
                 heroContainer.classList.remove("hide_herro_anination");
                 if(isMusicPlay){                    
@@ -529,7 +518,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
                 }
                 isShoping = false;                
             }, 5000);            
-        }
+    }
 
         function changeEnemy() {
             currentPersonIndex = (currentPersonIndex + 1) % personages.length;
