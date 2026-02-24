@@ -135,17 +135,18 @@ body {
     background-repeat: no-repeat; /* Изображение не повторяется */
 }    
 
-.game-screen-turn-port {
+.game-screen-turn-albom {
+    display: none;
     width: 375px; 
     height: 734px;   
-    background-image: url('pic/bg_turn_screen.jpg'); /* Путь к изображению */    
+    background-image: url('pic/bg_turn_screen_albom.jpg'); /* Путь к изображению */    
 } 
 
-.game-screen-turn-albom {
+.game-screen-turn-land {
     display: block;
     width: 734px;
     height: 375px;   
-    background-image: url('pic/bg_turn_screen.jpg'); /* Путь к изображению */    
+    background-image: url('pic/bg_turn_screen_land.jpg'); /* Путь к изображению */    
 } 
 
 

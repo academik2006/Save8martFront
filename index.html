@@ -35,9 +35,6 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
-
-
-
 <!-- Блок для портретной ориентации -->
 <div id="portrait-container" class="portrait-mode">
         
@@ -73,14 +70,14 @@
         </div>   
     </div>
 
-    <div id="turn_screen_id" class="game-screen game-screen-turn-port"> </div>
+    <div id="turn_screen_id" class="game-screen-turn-albom"> </div>
 
 </div>
     
 <!-- Блок для альбомной ориентации -->
 <div id="landscape-container" class="landscape-mode hidden">   
 
-    <div id="turn_screen_land_id" class="game-screen game-screen-turn-albom">
+    <div id="turn_screen_land_id" class="game-screen-turn-land">
         <div class="modal-footer" style="margin-top: 260px;">
             <!-- Эта кнопка будет показана только в альбомной ориентации -->
             <button id="continue-game" class="button-common button-common-rules">Старт</button>
@@ -131,7 +128,7 @@
 
     <div id="сongratulations-dialogue" class="game-screen game-screen-win">
 
-        <div style="margin-right: 20px;">               
+        <div style="margin-right: 20px; margin-bottom: 20px;">               
             <div class="button-right">
                 <div class="lose-screen-body win-screen-body">
                     <p> Всё получилось. Ты - настоящая супергероиня праздника!</p>
@@ -257,11 +254,13 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     let audioWin = document.getElementById("audioWin");
     let audioShoping = document.getElementById("audioShoping");
     let audioJumping = document.getElementById("audioJumping");
-    
+       
 
     let isJumping = false;    
     let isShoping = false;    
-    let heroBottomOffset = 0;    
+
+    let heroBottomOffset = 0;
+    let startCont;    
     let gameInterval;
     let newEnemy;
     let heroY;
@@ -374,8 +373,11 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         // Получаем координаты контейнера
         let rect = heroCont.getBoundingClientRect();
 
+        console.log('Базовые координаты контейнера:', rect);
+
         // Координата нижней границы контейнера относительно viewport
         let absoluteBottom = rect.bottom + window.scrollY;
+        console.log('Базовые координаты нижней границы контейнера:', absoluteBottom);
         
         console.log('Базовая позиция героя:', screenHeightY - absoluteBottom + wifeHeight);
         return screenHeightY - absoluteBottom + wifeHeight;
@@ -387,7 +389,12 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         audioWin.volume = 0.2;          
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
-        heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу
+        console.log('Начальная позиция героя', heroBottomOffset); 
+        if(heroBottomOffset == 0) {
+            heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу        
+        } else {
+            heroContainer.style.bottom = `${heroBottomOffset}px`;
+        }
         console.log('Начальная позиция героя', heroBottomOffset); 
         startTimer()
         if(isMusicPlay) {
@@ -446,7 +453,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     let isPlayingJumpSound = false; // Переменная для отслеживания текущего состояния звука
 
     function heroJump() {
-
+        
         playJumpAudio()        
         heroBottomOffset += 4;
         heroContainer.style.bottom = `${heroBottomOffset}px`;
@@ -462,8 +469,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             heroBottomOffset -= 4;
             heroContainer.style.bottom = `${heroBottomOffset}px`;
             heroImg.src = "pic/wife_stay.png"; // Возвращаем исходную картинку
-            isJumping = false;
-            heroY = 173;            
+            isJumping = false;            
             isPlayingJumpSound = false;
             } , 250); // Время падения примерно вдвое меньше подъема
         }, 250); // Верхняя точка наступает спустя половину общего времени прыжка
@@ -574,6 +580,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             shoppingBtn.disabled = false;        
             isJumping = false;           
             enemyCoordinate = 0;
+            heroBottomOffset = 0;            
             enemyContainer.style.left = "0%";
             changeEnemy()
         }
