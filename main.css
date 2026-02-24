@@ -12,6 +12,7 @@ body {
     background-color: #f0f0f0;
     margin: 0;
     padding: 0px;
+    padding-top: env(safe-area-inset-top); /* Использует безопасный отступ области просмотра */
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -373,6 +374,19 @@ body {
     to {
         opacity: 0;
     }
+}
+
+@keyframes heroJump {
+    0%, 100% {
+        transform: translateY(0); /* Начальная и конечная позиции */
+    }
+    50% {
+        transform: translateY(-150px); /* Максимальный подъём вверх */
+    }
+}
+
+.hero-jumping {
+    animation: heroJump 1s ease-out both; /* Длительность и характер анимации */
 }
 
    

@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Спастись на 8 марта</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script> 
     <link rel="stylesheet" href="main.css">      
@@ -258,12 +258,9 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 
     let isJumping = false;    
     let isShoping = false;    
-
-    let heroBottomOffset = 0;
-    let startCont;    
+    
     let gameInterval;
-    let newEnemy;
-    let heroY;
+    let newEnemy;    
     const accelerationFactor = 1.5;
     const wifeHeight = 151;
     const screenHeightY = 734;
@@ -389,13 +386,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         audioWin.volume = 0.2;          
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
-        console.log('Начальная позиция героя', heroBottomOffset); 
-        if(heroBottomOffset == 0) {
-            heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу        
-        } else {
-            heroContainer.style.bottom = `${heroBottomOffset}px`;
-        }
-        console.log('Начальная позиция героя', heroBottomOffset); 
+        /*heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу        */
         startTimer()
         if(isMusicPlay) {
             audioMain.play();     
@@ -450,29 +441,32 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             
     }
 
-    let isPlayingJumpSound = false; // Переменная для отслеживания текущего состояния звука
-
+    let isPlayingJumpSound = false; // Переменная для отслеживания текущего состояния звука    
+    let startBottomPositionHero = 0;    
+    
     function heroJump() {
-        
-        playJumpAudio()        
-        heroBottomOffset += 4;
-        heroContainer.style.bottom = `${heroBottomOffset}px`;
-        heroY = `${heroBottomOffset}px`;
+        if (isJumping) {            
+            playJumpAudio()
+            startBottomPositionHero = heroContainer.style.bottom ? parseFloat(heroContainer.style.bottom) : 0;
+            heroContainer.classList.add("hero-jumping"); // Включаем анимацию прыжка
+            heroImg.src = "pic/wife_jump.png"; // Меняем картинку на прыжковую
+            // Слушатель завершения анимации
+            heroContainer.addEventListener("animationend", finishJump);
+        }
+    }
 
-        // Ждем немного (верхняя точка прыжка)
-        setTimeout(() => {
-            heroImg.src = "pic/wife_jump.png"; // Меняем картинку в наивысшей точке прыжка            
-            heroY = `${heroBottomOffset}px`;
-        // Начинаем спуск
-        setTimeout(() => {
-            heroY = `${heroBottomOffset}px`;
-            heroBottomOffset -= 4;
-            heroContainer.style.bottom = `${heroBottomOffset}px`;
-            heroImg.src = "pic/wife_stay.png"; // Возвращаем исходную картинку
-            isJumping = false;            
-            isPlayingJumpSound = false;
-            } , 250); // Время падения примерно вдвое меньше подъема
-        }, 250); // Верхняя точка наступает спустя половину общего времени прыжка
+    function finishJump(event) {
+        event.target.classList.remove("hero-jumping"); // Убираем класс анимации
+        heroImg.src = "pic/wife_stay.png"; // Возвращаем исходную картинку
+        isJumping = false; // Признак завершения прыжка
+        isPlayingJumpSound = false;
+    }
+
+// Очищаем слушатели при выходе
+    window.addEventListener("beforeunload", cleanupJumpListeners);
+
+    function cleanupJumpListeners() {
+        heroContainer.removeEventListener("animationend", finishJump);
     }
 
     function playJumpAudio() {
@@ -486,36 +480,23 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         }   
     }
 
-    function checkColision () {
-        // Предположим, высота игрока равна heroHeight, а высота врага — enemyHeight
-        // Также предполагаем, что verticalOffset — это текущая вертикальная позиция игрока
-        // Текущие координаты игроков получаються через left/right styles
+    function checkCollision() {
+    // Координаты и размеры героев
+        let enemyRect = enemyContainer.getBoundingClientRect(); // Прямоугольник врага
+        let heroRect = heroContainer.getBoundingClientRect();   // Прямоугольник героя
 
-        let enemyX = parseFloat(enemyContainer.style.left) || 0;
-        let heroX = 73;
-        let verticalOffset = parseFloat(heroY) || 0;
-        let enemyHeight = newEnemy.height                       
-
-        // Определяем зону столкновения по оси X
-        const collisionRangeStart = 70; // % начало зоны
-        const collisionRangeEnd = 80;   // % конец зоны
-
-        // Проверяем попадание персонажа в зону столкновения по оси X
-        if (enemyX >= collisionRangeStart && enemyX <= collisionRangeEnd) {
-            // Внутри зоны по оси X, теперь проверим вертикальную ось Y
-            if (verticalOffset > enemyHeight) {                            
-                console.log('Высота текущего врага:', enemyHeight);
-                console.log('Высота героя:', verticalOffset);
-                console.log("Игрок пролетел над врагом.");
-            } else {                    
-                console.log('Высота текущего врага:', enemyHeight);
-                console.log('Высота героя:', verticalOffset);
-                console.log("Столкновение, конец игры");
-                endGame();
-                }
-        } else {            
-            console.log("Нет столкновения, враг далеко.");
-        }                          
+        // Проверяем столкновение прямоугольников
+        if (
+            heroRect.x < enemyRect.x + enemyRect.width &&
+            heroRect.x + heroRect.width > enemyRect.x &&
+            heroRect.y < enemyRect.y + enemyRect.height &&
+            heroRect.y + heroRect.height > enemyRect.y
+        ) {
+            console.log("Столкновение, конец игры");
+            endGame();
+        } else {
+        console.log("Нет столкновения, враг далеко.");
+        }
     }
 
         // Реакция на клик кнопки прыжка
