@@ -15,10 +15,22 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
+<audio id="audioShoping">
+    <source src="music/car.mp3" type="audio/mpeg">    
+    Проигрывание музыки не поддерживается.
+</audio>
+
 <audio loop id="audioWin">
     <source src="music/win.mp3" type="audio/mpeg">    
     Проигрывание музыки не поддерживается.
 </audio>
+
+<audio id="audioJumping">
+    <source src="music/jump.mp3" type="audio/mpeg">        
+    Проигрывание музыки не поддерживается.
+</audio>
+
+
 
 
 <!-- Блок для портретной ориентации -->
@@ -229,6 +241,9 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     let isMusicPlay = true;
     let audioMain = document.getElementById("audioMain");
     let audioWin = document.getElementById("audioWin");
+    let audioShoping = document.getElementById("audioShoping");
+    let audioJumping = document.getElementById("audioJumping");
+    
 
     let isJumping = false;    
     let heroBottomOffset = 0;    
@@ -277,7 +292,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     function startGame() {
         audioMain.volume = 0.2;
         audioWin.volume = 0.2;        
-        /*audioMain.play();     */
+        audioMain.play();     
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)
         heroBottomOffset = setHeroBottomOffset(); // Базовая позиция снизу
@@ -319,67 +334,78 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             changeEnemy(); // Заменяем врага на следующего
         }
 
-        // Обработка прыжков
-        
-            if (isJumping) {                
-                isJumping = true;
-                heroBottomOffset += 4;
-                heroContainer.style.bottom = `${heroBottomOffset}px`;
-                heroY = `${heroBottomOffset}px`;
-
-                // Ждем немного (верхняя точка прыжка)
-                setTimeout(() => {
-                    heroImg.src = "pic/wife_jump.png"; // Меняем картинку в наивысшей точке прыжка            
-                    heroY = `${heroBottomOffset}px`;
-                    // Начинаем спуск
-                setTimeout(() => {
-                    heroY = `${heroBottomOffset}px`;
-                    heroBottomOffset -= 4;
-                    heroContainer.style.bottom = `${heroBottomOffset}px`;
-                    heroImg.src = "pic/wife_stay.png"; // Возвращаем исходную картинку
-                    isJumping = false;
-                    heroY = `${heroBottomOffset}px`;
-                    } , 250); // Время падения примерно вдвое меньше подъема
-                }, 250); // Верхняя точка наступает спустя половину общего времени прыжка
-                
-            }
-            
-            checkColision()          
-            
+        if (isJumping) {                                
+            heroJump()                
         }
+        checkColision()          
+            
+    }
 
-        function checkColision () {
-             // Предположим, высота игрока равна heroHeight, а высота врага — enemyHeight
-            // Также предполагаем, что verticalOffset — это текущая вертикальная позиция игрока
-            // Текущие координаты игроков получаються через left/right styles
+    let isPlayingJumpSound = false; // Переменная для отслеживания текущего состояния звука
 
-            let enemyX = parseFloat(enemyContainer.style.left) || 0;
-            let heroX = 73;
-            let verticalOffset = parseFloat(heroY) || 0;
-            let enemyHeight = newEnemy.height            
-            console.log('Высота текущего врага:', enemyHeight);
-            console.log('Высота героя:', verticalOffset);
+    function heroJump() {
+
+        if(isMusicPlay) { 
+            if(isPlayingJumpSound==false){
+                audioJumping.pause();
+                audioJumping.currentTime = 0; 
+            } 
+            audioJumping.play();           
+            isPlayingJumpSound = true;           
+        }   
+
+        heroBottomOffset += 4;
+        heroContainer.style.bottom = `${heroBottomOffset}px`;
+        heroY = `${heroBottomOffset}px`;
+
+        // Ждем немного (верхняя точка прыжка)
+        setTimeout(() => {
+            heroImg.src = "pic/wife_jump.png"; // Меняем картинку в наивысшей точке прыжка            
+            heroY = `${heroBottomOffset}px`;
+        // Начинаем спуск
+        setTimeout(() => {
+            heroY = `${heroBottomOffset}px`;
+            heroBottomOffset -= 4;
+            heroContainer.style.bottom = `${heroBottomOffset}px`;
+            heroImg.src = "pic/wife_stay.png"; // Возвращаем исходную картинку
+            isJumping = false;
+            heroY = `${heroBottomOffset}px`;            
+            isPlayingJumpSound = false;
+            } , 250); // Время падения примерно вдвое меньше подъема
+        }, 250); // Верхняя точка наступает спустя половину общего времени прыжка
+    }
+
+    function checkColision () {
+        // Предположим, высота игрока равна heroHeight, а высота врага — enemyHeight
+        // Также предполагаем, что verticalOffset — это текущая вертикальная позиция игрока
+        // Текущие координаты игроков получаються через left/right styles
+
+        let enemyX = parseFloat(enemyContainer.style.left) || 0;
+        let heroX = 73;
+        let verticalOffset = parseFloat(heroY) || 0;
+        let enemyHeight = newEnemy.height            
+        console.log('Высота текущего врага:', enemyHeight);
+        console.log('Высота героя:', verticalOffset);
             
 
-            // Определяем зону столкновения по оси X
-            const collisionRangeStart = 70; // % начало зоны
-            const collisionRangeEnd = 80;   // % конец зоны
+        // Определяем зону столкновения по оси X
+        const collisionRangeStart = 70; // % начало зоны
+        const collisionRangeEnd = 80;   // % конец зоны
 
-            // Проверяем попадание персонажа в зону столкновения по оси X
-            if (enemyX >= collisionRangeStart && enemyX <= collisionRangeEnd) {
+        // Проверяем попадание персонажа в зону столкновения по оси X
+        if (enemyX >= collisionRangeStart && enemyX <= collisionRangeEnd) {
             // Внутри зоны по оси X, теперь проверим вертикальную ось Y
-                if (verticalOffset > enemyHeight) {
-                // Игрок выше врага, следовательно, столкновения нет
+            if (verticalOffset > enemyHeight) {
+            // Игрок выше врага, следовательно, столкновения нет
+            console.log("Игрок пролетел над врагом.");
+            } else {                    
                 console.log("Игрок пролетел над врагом.");
-                } else {                    
-                    console.log("Игрок пролетел над врагом.");
-                    endGame();
-                    }
-            } else {
-            // Враг вне зоны столкновения по оси X
+                endGame();
+                }
+        } else {            
             console.log("Нет столкновения, враг далеко.");
-            }                          
-        }
+        }                          
+    }
 
         // Реакция на клик кнопки прыжка
         jumpBtn.onclick = () => {
@@ -389,18 +415,31 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         };
 
         // Переход на шопинг
-        shoppingBtn.onclick = () => {            
-            heroContainer.classList.add("oops");
-            setTimeout(() => {
-                heroContainer.classList.remove("oops");
-            }, 5000);
+        shoppingBtn.onclick = () => {           
+           goShoping()
         };
 
+        function goShoping () {
+            if(isMusicPlay) {
+                audioMain.pause()          
+                audioShoping.play() 
+            }                        
+
+            heroContainer.classList.add("hide_herro_anination");
+            setTimeout(() => {
+                heroContainer.classList.remove("hide_herro_anination");
+                if(isMusicPlay){
+                    
+                    audioMain.play()
+                }                
+            }, 5000);            
+        }
+
         function changeEnemy() {
-            currentPersonIndex = (currentPersonIndex + 1) % personages.length;
-            newEnemy = personages[currentPersonIndex];
+            const randomIndex = Math.floor(Math.random() * personages.length);
+            newEnemy = personages[randomIndex];    
             enemyCoordinate = 0;
-            enemyContainer.style.left = "0%"; // Возвращаем врага в начало                                   
+            enemyContainer.style.left = "0%"; // Возвращаем врага в начало     
             enemySpeed = newEnemy.speed; // Устанавливаем новую скорость 
             document.getElementById("enemy_pic_id").src = newEnemy.image;            
         }

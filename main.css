@@ -336,7 +336,7 @@ body {
 }
 
 /* Прозрачность и скрытие персонажа при столкновениях */
-.oops {
+.hide_herro_anination {
     animation: fadeOut 1s forwards;
 }
 
