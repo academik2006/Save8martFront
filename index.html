@@ -261,9 +261,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     
     let gameInterval;
     let newEnemy;    
-    const accelerationFactor = 1.5;
-    const wifeHeight = 151;
-    const screenHeightY = 734;
+    const accelerationFactor = 1.5;        
     let enemyCoordinate = 0;
      
     const childPhrases = [
@@ -457,20 +455,47 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         }   
     }
 
-    function checkCollision() {
-        let heroRect = heroContainer.getBoundingClientRect();
-        let enemyRect = enemyContainer.getBoundingClientRect();        
-        
-        // Проверяем пересечение по горизонтали и вертикали
-        if (-10 <= enemyRect.x - heroRect.x && enemyRect.x - heroRect.x <= 10) {
-            if(enemyRect.top - heroRect.bottom > 40){
-                console.log("Перепрыгнули!", enemyRect.top - heroRect.bottom);                
-            }
-            else {                
-                console.log("Столкновение!", enemyRect.top - heroRect.bottom);                
-            }
-        }     
+    function getElementPosition(elementId) {
+        return document.querySelector(`#${elementId}`).getBoundingClientRect();
     }
+
+    let hasCollidedInCurrentJump = false; // Флаг для регистрации одиночного события столкновения
+
+    function checkCollision() {
+        const heroImageRect = getElementPosition('hero_image_id');
+        const enemyImageRect = getElementPosition('enemy_pic_id');
+
+        const heroX = heroImageRect.left + window.scrollX;
+        const heroY = heroImageRect.top + window.scrollY;
+        const enemyX = enemyImageRect.left + window.scrollX;
+        const enemyY = enemyImageRect.top + window.scrollY;
+
+        const contactWidth = 140;      // Допуск по горизонтали
+        const jumpHigh = 100;          // Максимальная высота прыжка
+
+        if (isJumping) {
+            if (!hasCollidedInCurrentJump) {                
+                if (heroY + jumpHigh > enemyY) {
+                    console.log("Прыгаем. перепрыгнул");
+                    hasCollidedInCurrentJump = true; // Устанавливаем флаг, предотвращая последующие обработки
+                } else {
+                    console.log("Прыгаем. столкновение");
+                    hasCollidedInCurrentJump = true; // Даже при столкновении ставим флаг, чтобы запретить дальнейшие проверки
+                }
+            }
+        } else {
+            // Возвращаем флаг в исходное состояние при завершении прыжка
+            hasCollidedInCurrentJump = false;
+
+            if (heroX <= enemyX + enemyImageRect.width && heroX + heroImageRect.width >= enemyX &&
+                heroY <= enemyY + enemyImageRect.height && heroY + heroImageRect.height >= enemyY) {
+                console.log("Стоим. Столкновение!");
+            } else {
+                console.log("Стоим. Нет столкновения!");
+            }
+        }
+    }
+    
 
     // Функция для отметки места столкновения
     function markCollisionPoint() {
@@ -521,7 +546,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     }
 
         function changeEnemy() {
-            currentPersonIndex = (currentPersonIndex + 1) % personages.length;
+            /*currentPersonIndex = (currentPersonIndex + 1) % personages.length;*/
             newEnemy = personages[currentPersonIndex];
             enemyCoordinate = 0;
             enemyContainer.style.left = "0%";
