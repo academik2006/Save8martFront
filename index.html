@@ -89,13 +89,7 @@
             
             <div class="timer-body">
                 <div class="timer-text" id="timer">0</div>
-            </div>
-            
-            <div class="message-body">
-                <p id="message-enemy-id">Ой, быт оказался коварнее..</p>
-            </div>
-            <div style="width: 120px;"></div>
-        
+            </div>                                
 
             <div>
                 <button id="music-icon" style="margin-right: 20px;" class="music-button">
@@ -107,6 +101,7 @@
         <div id="game_area_id" class="game-area">
             <div id="enemy_id" class="enemy-conteiner">
                 <img id="enemy_pic_id" src="pic/man.png" alt="enemy_pic">
+                <p id="message-enemy-id" class="speech-bubble">Фраза</p>
             </div>
         
             <div id="hero_id" class="hero-conteiner">
@@ -163,7 +158,7 @@
 
 
 let timerInterval = null;
-const SECONDS_FOR_ONE_GAME = 10;
+const SECONDS_FOR_ONE_GAME = 60;
 
 document.addEventListener('DOMContentLoaded', () => {
     const portraitContainer = document.querySelector('#portrait-container');
