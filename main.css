@@ -338,6 +338,7 @@ body {
 }
 
 .enemy-conteiner, .hero-conteiner {
+    margin-bottom: -40px;
     position: absolute; /* Позиция абсолютная относительно родительского контейнера */    
     width: auto;        /* Пример ширины персонажей */
     height: auto;       /* Пример высоты персонажей */
@@ -378,12 +379,12 @@ body {
         transform: translateY(0); /* Начальная и конечная позиции */
     }
     50% {
-        transform: translateY(-150px); /* Максимальный подъём вверх */
+        transform: translateY(-200px); /* Максимальный подъём вверх */
     }
 }
 
 .hero-jumping {
-    animation: heroJump 1s ease-out both; /* Длительность и характер анимации */
+    animation: heroJump 1.4s ease-out both; /* Длительность и характер анимации */
 }
 
 @keyframes enemyMove {

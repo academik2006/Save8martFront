@@ -21,7 +21,7 @@
 </audio>
 
 <audio loop id="audioWin">
-    <source src="music/win.mp3" type="audio/mpeg">    
+    <source src="music/win_audio.mp3" type="audio/mpeg">    
     Проигрывание музыки не поддерживается.
 </audio>
 
@@ -115,7 +115,7 @@
         </div>
      
         <div class="bottom_bar_conteiner">
-            <div style="margin-top: 40px; margin-left: 20px;">
+            <div style="margin-top: 50px; margin-left: 20px;">
                 <button id="shopping_button_id" class="button-common button-common-280-red button-common-280-green">Поехать на шопинг</button>
             </div>
             <div>
@@ -163,7 +163,7 @@
 
 
 let timerInterval = null;
-const SECONDS_FOR_ONE_GAME = 600;
+const SECONDS_FOR_ONE_GAME = 10;
 
 document.addEventListener('DOMContentLoaded', () => {
     const portraitContainer = document.querySelector('#portrait-container');
@@ -280,7 +280,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         {
             type: 'man',
             speed: 3,
-            height: 172,
+            height: 161,
             image: 'pic/man.png',
             phrases: [
                 'Где мои счастливые носки?',
@@ -362,7 +362,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         audioWin.volume = 0.2;          
         resetGame();
         gameInterval = setInterval(updateGameState, 16); // Обновляем состояние игры каждые ~16 мс (~60FPS)        
-        startTimer()
+        startTimer();
         if(isMusicPlay) {
             audioMain.play();     
         }
@@ -371,7 +371,14 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     // Завершение игры
     function endGame() {
         clearInterval(gameInterval);
-        showLoseScreen()        
+        stopTimer();
+        showLoseScreen();        
+    }
+
+    function winGame () {
+        clearInterval(gameInterval);
+        showWinScreen();
+
     }
 
     function startTimer() {
@@ -382,8 +389,8 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
                         timeLeft--;
                         document.getElementById('timer').innerText = timeLeft;                        
                     } else {
-                        resetGame()
-                        showWinScreen()
+                        resetGame();
+                        winGame();
                     }
                 }, 1000);
             }            
@@ -481,6 +488,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
                 } else {
                     console.log("Прыгаем. столкновение");
                     hasCollidedInCurrentJump = true; // Даже при столкновении ставим флаг, чтобы запретить дальнейшие проверки
+                    endGame();
                 }
             }
         } else {
@@ -490,6 +498,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             if (heroX <= enemyX + enemyImageRect.width && heroX + heroImageRect.width >= enemyX &&
                 heroY <= enemyY + enemyImageRect.height && heroY + heroImageRect.height >= enemyY) {
                 console.log("Стоим. Столкновение!");
+                endGame();
             } else {
                 console.log("Стоим. Нет столкновения!");
             }
@@ -546,7 +555,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     }
 
         function changeEnemy() {
-            /*currentPersonIndex = (currentPersonIndex + 1) % personages.length;*/
+            currentPersonIndex = (currentPersonIndex + 1) % personages.length;
             newEnemy = personages[currentPersonIndex];
             enemyCoordinate = 0;
             enemyContainer.style.left = "0%";
@@ -580,11 +589,13 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             changeEnemy()
         }
         
-        function showWinScreen() {        
-        audioMain.pause()          
-        audioWin.play()
-        document.getElementById("game_screen_id").style.display = "none";
-        document.getElementById("сongratulations-dialogue").style.display = "block";        
+        function showWinScreen() {
+            audioMain.pause();          
+            setTimeout(() => {
+            audioWin.play();  
+            document.getElementById("game_screen_id").style.display = "none";
+            document.getElementById("сongratulations-dialogue").style.display = "block";
+            }, 1000)                
         }
 
         function showLoseScreen() {        
