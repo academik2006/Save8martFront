@@ -392,8 +392,10 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         timerInterval = null; 
     }
 
+    let isChangingEnemy = false;
+
     // Основные игровые процессы
-    function updateGameState() {          
+    function updateGameState() {   
                 
         // Перемещение врага
         let increment = newEnemy.speed * accelerationFactor / 25 + 0.1;         
@@ -401,7 +403,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         enemyContainer.style.left = `${enemyCoordinate}%`;   
                 
         // Проверка достижения конца экрана
-        if (parseInt(enemyContainer.style.left.split("%")[0]) >= 90) {
+        if (parseInt(enemyContainer.style.left.split("%")[0]) >= 90) {            
             changeEnemy(); // Заменяем врага на следующего
         }
 
@@ -557,31 +559,40 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         }, 4000);           
     }
 
-        function changeEnemy() {
-            currentPersonIndex = (currentPersonIndex + 1) % personages.length;
-            newEnemy = personages[currentPersonIndex];
-            enemyCoordinate = 0;
-            enemyContainer.style.left = "0%";
-            enemySpeed = newEnemy.speed;
-            document.getElementById("enemy_pic_id").src = newEnemy.image;    
-            const randomPhrase = newEnemy.phrases[Math.floor(Math.random() * newEnemy.phrases.length)];
-            document.getElementById("message-enemy-id").textContent = randomPhrase;    
-            if(isMusicPlay && newEnemy.audioElement != null){
-                newEnemy.audioElement.play()
-            }
-        }
+    function changeEnemy() {
 
-        function switchMusic() {
-            if (isMusicPlay) {
-                audioMain.pause();
-                document.getElementById("music_pic_id").src = "pic/sound_off.png";        
-                isMusicPlay = false;
-            } else {
-                audioMain.play();
-                document.getElementById("music_pic_id").src = "pic/sound_on.png";                
-                isMusicPlay = true;
-            }    
-        }  
+        if(isChangingEnemy) return;
+
+        isChangingEnemy = true;
+
+        currentPersonIndex = (currentPersonIndex + 1) % personages.length;
+        newEnemy = personages[currentPersonIndex];
+        document.getElementById("enemy_pic_id").src = newEnemy.image;    
+        enemySpeed = newEnemy.speed;        
+        const randomPhrase = newEnemy.phrases[Math.floor(Math.random() * newEnemy.phrases.length)];
+        document.getElementById("message-enemy-id").textContent = randomPhrase;   
+        
+        enemyCoordinate = 0;
+        enemyContainer.style.left = "0%";
+          
+        if(isMusicPlay && newEnemy.audioElement != null){
+            newEnemy.audioElement.play()            
+        }      
+        isChangingEnemy = false;
+        
+    }
+
+    function switchMusic() {
+        if (isMusicPlay) {
+            audioMain.pause();
+            document.getElementById("music_pic_id").src = "pic/sound_off.png";        
+            isMusicPlay = false;
+        } else {
+            audioMain.play();
+            document.getElementById("music_pic_id").src = "pic/sound_on.png";                
+            isMusicPlay = true;
+        }    
+    }  
 
         // Сброс состояния игры
         function resetGame() {    
