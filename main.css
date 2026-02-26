@@ -91,11 +91,12 @@ body {
 
 .lose-screen-body {    
     width: 320px;    
-    height: 80px; 
+    height: 170px; 
     display: flex;
+    margin-bottom: 5px;
     justify-content: center;   
     text-align: center;   
-    margin-top: 220px;        
+    margin-top: 140px;        
     padding: 5px;    
     background-color:burlywood;
     border: 2px solid brown; /* Добавлен стиль границы */
@@ -103,7 +104,8 @@ body {
     font-family: 'CirceRegular', Arial, sans-serif;            
 }
 .win-screen-body {        
-    height: 120px;        
+    height: 100px;
+    margin-top: 210px;               
 }
 
 .game-screen {

@@ -42,6 +42,16 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
+<audio id="audioCat">
+    <source src="music/cat_myu.mp3" type="audio/mpeg">        
+    Проигрывание музыки не поддерживается.
+</audio>
+
+<audio id="audioFish">
+    <source src="music/fish_audio.mp3" type="audio/mpeg">        
+    Проигрывание музыки не поддерживается.
+</audio>
+
 <!-- Блок для портретной ориентации -->
 <div id="portrait-container" class="portrait-mode">
         
@@ -113,6 +123,7 @@
         
             <div id="hero_id" class="hero-conteiner">
                 <img id="hero_image_id" src="pic/wife_stay.png" alt="hero_pic">
+                <p id="message-hero-id" class="speech-bubble hidden">Фраза</p>
             </div>
         </div>
      
@@ -148,7 +159,7 @@
         <div style="margin-right: 20px;">               
             <div class="button-right">
                 <div class="lose-screen-body">
-                    <p>Ой, быт оказался коварнее..</p>
+                    <p>Ой! Быт оказался коварней...Кажется, тебя затянул водоворот из носков, каши и кошачьего «мяу». Но не расстраивайся! Вдохни, выдохни и попробуй еще раз. Отдых уже близко! </p>
                 </div>                
             </div>        
             
@@ -258,6 +269,9 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     let audioWin = document.getElementById("audioWin");
     let audioShoping = document.getElementById("audioShoping");
     let audioJumping = document.getElementById("audioJumping");
+
+    let audioCat = document.getElementById("audioCat");
+    let audioFish = document.getElementById("audioFish");
     
        
 
@@ -266,6 +280,8 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     
     let gameInterval;
     let newEnemy;    
+    let timeout1;
+    let timeout2;
     const accelerationFactor = 1.5;        
     let enemyCoordinate = 0;     
     
@@ -276,42 +292,48 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             speed: 3,
             height: 161,
             image: 'pic/man.png',
-            phrases: manPhrases
+            phrases: manPhrases,
+            audioElement: null
         },
         {
             type: 'elderSon', // сохранено значение elderSon
             speed: 6,
             height: 175,
             image: 'pic/big_sun.png',
-            phrases: teenBoyPhrases
+            phrases: teenBoyPhrases,
+            audioElement: null
         },
         {
             type: 'youngerSon', // сохранено значение youngerSon
             speed: 7,
             height: 138,
             image: 'pic/little_sun.png',
-            phrases: boyPhrases
+            phrases: boyPhrases,
+            audioElement: null
         },
         {
             type: 'daughter', // сохранено значение daughter
             speed: 5,
             height: 87,
             image: 'pic/daughter.png',
-            phrases: girlPhrases
+            phrases: girlPhrases,
+            audioElement: null
         },
         {
             type: 'fish',
             speed: 8,
             height: 45,
             image: 'pic/fish.png',
-            phrases: fishPhrases
+            phrases: fishPhrases,
+            audioElement: audioFish
         },
         {
             type: 'cat',
             speed: 10,
             height: 73,
             image: 'pic/cat.png',
-            phrases: catPhrases
+            phrases: catPhrases,
+            audioElement: audioCat
         }
     ];
 
@@ -330,13 +352,17 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     }
 
     // Завершение игры
-    function endGame() {
+    function endGame() {        
+        clearTimeout(timeout1);
+        clearTimeout(timeout2);
+        isInProcess = false;
+        isShoping = false;
+        clearInterval(gameInterval);
+        stopTimer();      
         if(isMusicPlay) {
             audioMain.pause();
             audioLoseJump.play();
-        }
-        clearInterval(gameInterval);
-        stopTimer();            
+        }      
         showLoseScreen();        
     }
 
@@ -447,11 +473,9 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 
         if (isJumping) {
             if (!hasCollidedInCurrentJump) {                
-                if (heroY + jumpHigh > enemyY) {
-                    console.log("Прыгаем. перепрыгнул");
+                if (heroY + jumpHigh > enemyY) {                    
                     hasCollidedInCurrentJump = true; // Устанавливаем флаг, предотвращая последующие обработки
-                } else {
-                    console.log("Прыгаем. столкновение");
+                } else {                    
                     hasCollidedInCurrentJump = true; // Даже при столкновении ставим флаг, чтобы запретить дальнейшие проверки                                        
                     endGame();                    
                 }
@@ -461,13 +485,9 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             hasCollidedInCurrentJump = false;
 
             if (heroX <= enemyX + enemyImageRect.width && heroX + heroImageRect.width >= enemyX &&
-                heroY <= enemyY + enemyImageRect.height && heroY + heroImageRect.height >= enemyY) {
-                console.log("Стоим. Столкновение!");
-                endGame();                
-                
-            } else {
-                console.log("Стоим. Нет столкновения!");
-            }
+                heroY <= enemyY + enemyImageRect.height && heroY + heroImageRect.height >= enemyY) {                
+                endGame();               
+            } 
         }
     }
     
@@ -499,25 +519,42 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         shoppingBtn.onclick = () => {           
            goShoping()
         };
+    
+    let isInProcess = false;    
 
     function goShoping () {
             
+        if (isInProcess || isShoping) return;
+
+        isInProcess = true;
         isShoping = true;
         shoppingBtn.disabled = true;
 
         if(isMusicPlay) {
             audioMain.pause()          
             audioShoping.play() 
-        }                        
+        }        
+        const randomPhrase = goShopingPhrases[Math.floor(Math.random() * goShopingPhrases.length)];
+        document.getElementById("message-hero-id").textContent = randomPhrase;    
+        document.getElementById("message-hero-id").classList.remove("hidden");
 
-        heroContainer.classList.add("hide_herro_anination");
-            setTimeout(() => {
-                heroContainer.classList.remove("hide_herro_anination");
-                if(isMusicPlay){                    
-                    audioMain.play()
-                }
-                isShoping = false;                
-            }, 5000);            
+        // Первый таймер для анимации
+        timeout1 = setTimeout(() => {
+            if (!isInProcess) return; // Проверка, завершился ли процесс
+            heroContainer.classList.add("hide_herro_anination");
+        }, 1000);
+
+        // Второй таймер для возврата состояния
+        timeout2 = setTimeout(() => {
+            if (!isInProcess) return; // Проверка, завершился ли процесс
+            document.getElementById("message-hero-id").classList.add("hidden");
+            heroContainer.classList.remove("hide_herro_anination");
+            if (isMusicPlay) {
+                audioMain.play();
+            }
+            isShoping = false;
+            isInProcess = false; // Завершаем операцию
+        }, 4000);           
     }
 
         function changeEnemy() {
@@ -529,6 +566,9 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             document.getElementById("enemy_pic_id").src = newEnemy.image;    
             const randomPhrase = newEnemy.phrases[Math.floor(Math.random() * newEnemy.phrases.length)];
             document.getElementById("message-enemy-id").textContent = randomPhrase;    
+            if(isMusicPlay && newEnemy.audioElement != null){
+                newEnemy.audioElement.play()
+            }
         }
 
         function switchMusic() {
@@ -577,14 +617,8 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 
 <script>
     let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
-    tg.expand(); //расширяем на все окно     
-
-    /*
-          
-    document.getElementById('exit-game-lose').addEventListener('click', function(){
-      tg.sendData("0");      
-    });   
-    */
+    tg.expand(); //расширяем на все окно   
+ 
 
     document.getElementById('exit-game-win').addEventListener('click', function(){
       tg.sendData("1");      
