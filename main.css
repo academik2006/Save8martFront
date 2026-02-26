@@ -259,11 +259,29 @@ body {
     width: 100%; /* Контейнер занимает всю доступную ширину */    
 }
 
+.timer-body {   
+    position: relative;
+    width: 65px; /* Автоматически определит необходимую ширину */
+    height: 65px; /* То же самое для высоты */
+    display: flex;
+    margin-left: 20px;
+    justify-content: center;        
+    background-image: url('pic/timer.png');    
+    background-position: center; /* Центрирование изображения */
+    background-repeat: no-repeat; /* Запрещаем повторение */
+    padding: 10px; /* Добавляем немного пространства вокруг содержимого */  
+}
+
 .timer-text {
-    color: black;
-    font-size: 32px;
-    font-family: 'CirceRegular', Arial, sans-serif;    
-    position: relative;   
+    position: absolute;    
+    top: 50%;           /* Начинаем сверху на середине родителя */
+    left: 50%;          /* Начало слева также посередине */
+    transform: translate(-50%, -30%); /* Перемещаем обратно в центр */
+    color: red;
+    font-size: 24px;    
+    font-weight: bold;  /* Исправлено с font-style на font-weight */
+    font-family: 'CirceRegular', Arial, sans-serif;        
+    margin-top: 10px;   /* Этот отступ больше не используется */
 }
 
 .music-button {   
@@ -305,20 +323,6 @@ body {
 .button-right {
     display: flex;
     justify-content: right;
-}
-
-.timer-body {   
-    position: relative;
-    width: 65px; /* Автоматически определит необходимую ширину */
-    height: 65px; /* То же самое для высоты */
-    display: flex;
-    margin-left: 20px;
-    justify-content: center; /* Горизонтальное выравнивание по центру */
-    align-items: center;
-    background-image: url('pic/timer.png');    
-    background-position: center; /* Центрирование изображения */
-    background-repeat: no-repeat; /* Запрещаем повторение */
-    padding: 10px; /* Добавляем немного пространства вокруг содержимого */  
 }
 
 .enemy-conteiner, .hero-conteiner {

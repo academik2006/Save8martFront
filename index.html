@@ -10,6 +10,8 @@
 </head>
 <body>
 
+<script src="phrases.js"></script>
+
 <audio loop id="audioMain">
     <source src="music/main_2.mp3" type="audio/mpeg">    
     Проигрывание музыки не поддерживается.
@@ -25,7 +27,12 @@
     Проигрывание музыки не поддерживается.
 </audio>
 
-<audio loop id="audioLose">
+<audio id="audioLoseJump">
+    <source src="music/lose.mp3" type="audio/mpeg">        
+    Проигрывание музыки не поддерживается.
+</audio>
+
+<audio id="audioLose">
     <source src="music/lose_audio.mp3" type="audio/mpeg">        
     Проигрывание музыки не поддерживается.
 </audio>
@@ -88,7 +95,7 @@
         <div class="top_bar_conteiner">
             
             <div class="timer-body">
-                <div class="timer-text" id="timer">0</div>
+                <div class="timer-text" id="timer" style="margin-top: 10px;">0</div>
             </div>                                
 
             <div>
@@ -233,6 +240,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 </script>
 
 <script>
+    
     const gameScreen = document.getElementById("game_screen_id");
     const heroContainer = document.getElementById("hero_id");
     const enemyContainer = document.getElementById("enemy_id");
@@ -246,9 +254,11 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     let isMusicPlay = true;
     let audioMain = document.getElementById("audioMain");
     let audioLose = document.getElementById("audioLose");
+    let audioLoseJump = document.getElementById("audioLoseJump");
     let audioWin = document.getElementById("audioWin");
     let audioShoping = document.getElementById("audioShoping");
     let audioJumping = document.getElementById("audioJumping");
+    
        
 
     let isJumping = false;    
@@ -257,95 +267,51 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
     let gameInterval;
     let newEnemy;    
     const accelerationFactor = 1.5;        
-    let enemyCoordinate = 0;
-     
-    const childPhrases = [
-      'Мааам, он меня толкнул!',
-      'А можно я не буду это есть?', 
-      'Где мой второй кроссовок?',
-      'Я случайно разбил вазу...',       
-      'Мне нужен костюм огурца!', 
-      'А почему небо синее?',
-      'Покорми меня!',
-      'Смотри, как рисую на обоях!',
-      'Поиграем? Я спрятал твой телефон'
-    ];
-
+    let enemyCoordinate = 0;     
+    
+    // Персонажи с соответствующими фразами
     let personages = [
         {
             type: 'man',
             speed: 3,
             height: 161,
             image: 'pic/man.png',
-            phrases: [
-                'Где мои счастливые носки?',
-                'А что у нас сегодня на ужин?',
-                'Не видела ключи? Я опаздываю!',
-                'А как включается стиралка?', 
-                'Погладь мне рубашку',
-                'Грязно у нас. Приберись в квартире',
-                'Какой пароль от моих Госуслуг?',
-                'К нам едет моя мама. На неделю.',
-                'Где мой паспорт?',
-                'Я случайно выключил твой сериал'
-            ]
+            phrases: manPhrases
         },
         {
-            type: 'elderSon',
+            type: 'elderSon', // сохранено значение elderSon
             speed: 6,
-            height: 138,
+            height: 175,
             image: 'pic/big_sun.png',
-            phrases: childPhrases
+            phrases: teenBoyPhrases
         },
         {
-            type: 'youngerSon',
+            type: 'youngerSon', // сохранено значение youngerSon
             speed: 7,
-            height: 122,
+            height: 138,
             image: 'pic/little_sun.png',
-            phrases: childPhrases
+            phrases: boyPhrases
         },
         {
-            type: 'daughter',
+            type: 'daughter', // сохранено значение daughter
             speed: 5,
             height: 87,
             image: 'pic/daughter.png',
-            phrases: childPhrases
+            phrases: girlPhrases
         },
         {
             type: 'fish',
             speed: 8,
             height: 45,
             image: 'pic/fish.png',
-            phrases: [
-                'Пора чистить аквариум!',
-                'Хозяйка, корма маловато будет...',
-                'А роллы – это не из наших родственников?',
-                'Нам скучно, постучи по стеклу!',
-                'Смотри, умею пускать пузыри-сердечки!',
-                'Буль! Просто хотели напомнить о себе',
-                'Мы видели, как кошка трогала воду лапой',
-                'Этот грот уже не в тренде. Купи новый',
-                'Уплываем... как и твои планы на этот вечер',
-                'Аквариум маловат, нужен новый'
-            ]
+            phrases: fishPhrases
         },
         {
             type: 'cat',
             speed: 10,
             height: 73,
             image: 'pic/cat.png',
-            phrases: [
-                'Мяу! Я умираю от голода!',
-                'Вставай, уже 5 утра!',
-                'Я уронила цветок, иди убирай',
-                'Открой дверь в ванную. Не закрывай',
-                'Кусь за пятку!', 
-                'Где мой паштет с тунцом?',
-                'Поиграю твоими волосами, пока спишь',
-                'Твои кроссовки – это моя когтеточка',
-                'Ночной тыгыдык через 3... 2... 1...',
-                'Помой мой лоток'
-            ]
+            phrases: catPhrases
         }
     ];
 
@@ -365,15 +331,19 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
 
     // Завершение игры
     function endGame() {
+        if(isMusicPlay) {
+            audioMain.pause();
+            audioLoseJump.play();
+        }
         clearInterval(gameInterval);
-        stopTimer();
+        stopTimer();            
         showLoseScreen();        
     }
 
     function winGame () {
         clearInterval(gameInterval);
+        stopTimer();
         showWinScreen();
-
     }
 
     function startTimer() {
@@ -482,8 +452,8 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
                     hasCollidedInCurrentJump = true; // Устанавливаем флаг, предотвращая последующие обработки
                 } else {
                     console.log("Прыгаем. столкновение");
-                    hasCollidedInCurrentJump = true; // Даже при столкновении ставим флаг, чтобы запретить дальнейшие проверки
-                    endGame();
+                    hasCollidedInCurrentJump = true; // Даже при столкновении ставим флаг, чтобы запретить дальнейшие проверки                                        
+                    endGame();                    
                 }
             }
         } else {
@@ -493,7 +463,8 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
             if (heroX <= enemyX + enemyImageRect.width && heroX + heroImageRect.width >= enemyX &&
                 heroY <= enemyY + enemyImageRect.height && heroY + heroImageRect.height >= enemyY) {
                 console.log("Стоим. Столкновение!");
-                endGame();
+                endGame();                
+                
             } else {
                 console.log("Стоим. Нет столкновения!");
             }
