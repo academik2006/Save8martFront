@@ -375,7 +375,7 @@ document.getElementById("restart-game-lose").addEventListener("click", function 
         enemyContainer.style.left = `${enemyCoordinate}%`;   
                 
         // Проверка достижения конца экрана
-        if (parseInt(enemyContainer.style.left.split("%")[0]) >= 100) {
+        if (parseInt(enemyContainer.style.left.split("%")[0]) >= 90) {
             changeEnemy(); // Заменяем врага на следующего
         }
 
